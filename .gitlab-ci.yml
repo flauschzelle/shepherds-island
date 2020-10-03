@@ -37,8 +37,8 @@ build-love:
   - curl --location https://github.com/love2d/love/releases/download/$LOVE_VERSION/love-$LOVE_VERSION-win32.zip --output love-win32.zip
   - unzip love-win32.zip
   - mkdir win32
-  - cp love-$LOVE_VERSION.0-win32/*.dll love-$LOVE_VERSION.0-win32/license.txt win32
-  - cat love-$LOVE_VERSION.0-win32/love.exe $CI_PROJECT_PATH_SLUG.love > win32/$CI_PROJECT_PATH_SLUG.exe
+  - cp love-$LOVE_VERSION-win32/*.dll love-$LOVE_VERSION-win32/license.txt win32
+  - cat love-$LOVE_VERSION-win32/love.exe $CI_PROJECT_PATH_SLUG.love > win32/$CI_PROJECT_PATH_SLUG.exe
   - cd win32
   - zip -9 -r "../$CI_PROJECT_PATH_SLUG-win32.zip" .
   artifacts:
