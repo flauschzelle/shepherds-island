@@ -1,6 +1,7 @@
 require "lib.slam"
 vector = require "lib.hump.vector"
 tlfres = require "lib.tlfres"
+local class = require 'lib.middleclass' -- see https://github.com/kikito/middleclass
 
 require "helpers"
 
