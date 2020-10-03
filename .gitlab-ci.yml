@@ -8,23 +8,6 @@ stages:
 - build
 - deploy
 
-build-html:
-  stage: build
-  before_script:
-  - apk update
-  - apk add git
-  - git clone https://github.com/TannerRogalsky/love.js.git $LOVEJS_DIR
-  - rm -rf $LOVEJS_DIR/emscripten && git clone https://github.com/kripken/emscripten.git $LOVEJS_DIR/emscripten
-  - cp .emscripten ~/.emscripten
-  script:
-  - cd $LOVEJS_DIR/release-compatibility
-  - python ../emscripten/tools/file_packager.py game.data --preload "$CI_PROJECT_DIR@/" --js-output=game.js
-  - mv $LOVEJS_DIR/release-compatibility $CI_PROJECT_DIR/html
-  - sed "s|Game Title|$CI_PROJECT_NAME|" --in-place $CI_PROJECT_DIR/html/index.html
-  artifacts:
-    paths:
-    - html
-
 build-love:
   stage: build
   before_script:
@@ -49,7 +32,7 @@ build-love:
 pages:
   stage: deploy
   script:
-  - mv html/ public/
+  - mkdir public/
   - mkdir public/downloads/
   - mv $CI_PROJECT_PATH_SLUG.love public/downloads/
   - mv $CI_PROJECT_PATH_SLUG-win32.zip public/downloads/
@@ -59,4 +42,4 @@ pages:
     paths:
     - public
   only:
-  - master
+  - main
