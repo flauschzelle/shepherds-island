@@ -2,16 +2,17 @@ require "lib.slam"
 vector = require "lib.hump.vector"
 tlfres = require "lib.tlfres"
 local class = require 'lib.middleclass' -- see https://github.com/kikito/middleclass
+local libroomy = require 'lib.roomy' -- see https://github.com/tesselode/roomy
 
 require "helpers"
 
 CANVAS_WIDTH = 1920
 CANVAS_HEIGHT = 1080
 
-child_rotation = 0
+roomy = libroomy.new() -- roomy is the manager for all the rooms (scenes) in our game
+scenes = {} -- initialize list of scenes
 
 function love.load()
-
     -- initialize randomness in two ways:
     love.math.setRandomSeed(os.time())
     math.randomseed(os.time())
@@ -53,10 +54,19 @@ function love.load()
     end
     love.graphics.setNewFont(40) -- initialize default font size
 
+    -- scenes
+    for i,filename in pairs(love.filesystem.getDirectoryItems("scenes")) do
+        if filename ~= ".gitkeep" then
+            local sceneName = filename:sub(1, -5)
+            scenes[sceneName] = require ("scenes."..sceneName)
+        end
+    end
+    roomy:hook({exclude = {"draw"}}) --hook roomy in to manage the scenes (with exceptions)
+    roomy:enter(scenes.title) --start on title screen
+
 end
 
 function love.update(dt)
-    child_rotation = child_rotation+dt*5
 end
 
 function love.mouse.getPosition()
@@ -76,20 +86,14 @@ end
 function love.keyreleased(key)
 end
 
-function love.mousepressed(x, y, button)
-    sounds.meow:setPitch(0.5+math.random())
-    sounds.meow:play()
-end
-
 function love.draw()
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(1, 1, 1) -- white
     tlfres.beginRendering(CANVAS_WIDTH, CANVAS_HEIGHT)
 
-    -- Draw the game here!
+    -- (draw any global stuff here)
 
-    x, y = love.mouse.getPosition()
-
-    love.graphics.draw(images.child, x, y, child_rotation, 1, 1, images.child:getWidth()/2, images.child:getHeight()/2)
+    -- draw scene-specific stuff:
+    roomy:emit("draw")
 
     tlfres.endRendering()
 end
