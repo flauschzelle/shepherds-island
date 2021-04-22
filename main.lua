@@ -13,12 +13,6 @@ CANVAS_HEIGHT = 1080
 roomy = libroomy.new() -- roomy is the manager for all the rooms (scenes) in our game
 scenes = {} -- initialize list of scenes
 
--- game specific:
-child_rotation = 0
-child_x = CANVAS_WIDTH / 2
-child_y = CANVAS_HEIGHT / 2
-
-
 function love.load()
     -- boilerplate:
     -- initialize randomness in two ways:
@@ -80,11 +74,7 @@ function love.update(dt)
     -- boilerplate:
     input:update(dt)
     handleInput()
-
-    -- game spefific:
-    child_rotation = child_rotation+dt*5
-    child_x = child_x + input:getX() * 10
-    child_y = child_y + input:getY() * 10
+    roomy:emit("handleInput")
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
@@ -106,12 +96,6 @@ function handleInput()
     if input:isPressed("fullscreen") then
         isFullscreen = love.window.getFullscreen()
         love.window.setFullscreen(not isFullscreen)
-    end
-
-    -- game spefific:
-    if input:isPressed("click") then
-        sounds.meow:setPitch(0.5+math.random())
-        sounds.meow:play()
     end
 end
 

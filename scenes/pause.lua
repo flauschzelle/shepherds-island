@@ -5,8 +5,8 @@ function scene:draw()
     love.graphics.printf("PAUSED", 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
 end
 
-function scene:keypressed(key)
-    if key == "p" then
+function scene:handleInput()
+    if input:isPressed("pause") then
         roomy:pop()
     end
 end
