@@ -17,17 +17,17 @@ build-love:
   - apk add unzip
   script:
   - zip -9 -r $CI_PROJECT_PATH_SLUG.love .
-  - curl --location https://github.com/love2d/love/releases/download/$LOVE_VERSION/love-$LOVE_VERSION-win32.zip --output love-win32.zip
-  - unzip love-win32.zip
-  - mkdir win32
-  - cp love-$LOVE_VERSION-win32/*.dll love-$LOVE_VERSION-win32/license.txt win32
-  - cat love-$LOVE_VERSION-win32/love.exe $CI_PROJECT_PATH_SLUG.love > win32/$CI_PROJECT_PATH_SLUG.exe
-  - cd win32
-  - zip -9 -r "../$CI_PROJECT_PATH_SLUG-win32.zip" .
+  - curl --location https://github.com/love2d/love/releases/download/$LOVE_VERSION/love-$LOVE_VERSION-win64.zip --output love-win64.zip
+  - unzip love-win64.zip
+  - mkdir win64
+  - cp love-$LOVE_VERSION-win64/*.dll love-$LOVE_VERSION-win64/license.txt win64
+  - cat love-$LOVE_VERSION-win64/love.exe $CI_PROJECT_PATH_SLUG.love > win64/$CI_PROJECT_PATH_SLUG.exe
+  - cd win64
+  - zip -9 -r "../$CI_PROJECT_PATH_SLUG-win64.zip" .
   artifacts:
     paths:
     - '*.love'
-    - '*-win32.zip'
+    - '*-win64.zip'
 
 pages:
   stage: deploy
@@ -35,7 +35,7 @@ pages:
   - mkdir public/
   - mkdir public/downloads/
   - mv $CI_PROJECT_PATH_SLUG.love public/downloads/
-  - mv $CI_PROJECT_PATH_SLUG-win32.zip public/downloads/
+  - mv $CI_PROJECT_PATH_SLUG-win64.zip public/downloads/
   - cd public/downloads/
   - for file in *; do echo "<li><a href=\"$file\">$file</a></li>" >> index.html; done
   artifacts:
