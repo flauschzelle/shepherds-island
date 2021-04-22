@@ -11,6 +11,11 @@ CANVAS_HEIGHT = 1080
 child_rotation = 0
 
 function love.load()
+
+    -- initialize randomness in two ways:
+    love.math.setRandomSeed(os.time())
+    math.randomseed(os.time())
+
     -- set up default drawing options
     love.graphics.setBackgroundColor(0, 0, 0)
 
