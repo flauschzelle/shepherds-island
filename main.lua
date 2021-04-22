@@ -2,13 +2,16 @@ require "lib.slam"
 require "lib.helpers"
 vector = require "lib.hump.vector"
 tlfres = require "lib.tlfres"
-class = require 'lib.middleclass'
+class = require 'lib.middleclass' -- see https://github.com/kikito/middleclass
+libroomy = require 'lib.roomy' -- see https://github.com/tesselode/roomy
 Input = require "lib.input.Input"
 input = nil
 
 -- boilerplate:
 CANVAS_WIDTH = 1920
 CANVAS_HEIGHT = 1080
+roomy = libroomy.new() -- roomy is the manager for all the rooms (scenes) in our game
+scenes = {} -- initialize list of scenes
 
 -- game specific:
 child_rotation = 0
@@ -18,6 +21,9 @@ child_y = CANVAS_HEIGHT / 2
 
 function love.load()
     -- boilerplate:
+    -- initialize randomness in two ways:
+    love.math.setRandomSeed(os.time())
+    math.randomseed(os.time())
 
     -- set up default drawing options
     love.graphics.setBackgroundColor(0, 0, 0)
@@ -54,6 +60,18 @@ function love.load()
             end
         end
     end
+
+    love.graphics.setNewFont(40) -- initialize default font size
+
+    -- scenes
+    for i,filename in pairs(love.filesystem.getDirectoryItems("scenes")) do
+        if filename ~= ".gitkeep" then
+            local sceneName = filename:sub(1, -5)
+            scenes[sceneName] = require ("scenes."..sceneName)
+        end
+    end
+    roomy:hook({exclude = {"draw"}}) --hook roomy in to manage the scenes (with exceptions)
+    roomy:enter(scenes.title) --start on title screen
 
     input = Input:new()
 end
@@ -99,13 +117,17 @@ end
 
 function love.draw()
     -- boilerplate:
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(1, 1, 1) -- white
     tlfres.beginRendering(CANVAS_WIDTH, CANVAS_HEIGHT)
+
+    -- (draw any global stuff here)
     -- Show this somewhere to the user so they know where to configure
     love.graphics.printf("Edit '" .. configFilePath .. "' to configure the input mapping.", 0, 990, CANVAS_WIDTH, "center")
-    
+
     -- game specific:
-    love.graphics.draw(images.child, child_x, child_y, child_rotation, 1, 1, images.child:getWidth()/2, images.child:getHeight()/2)
+    -- draw scene-specific stuff:
+    roomy:emit("draw")
+    --  update draing to love.graphics.draw(images.child, child_x, child_y, child_rotation, 1, 1, images.child:getWidth()/2, images.child:getHeight()/2)
 
     tlfres.endRendering()
 end
