@@ -32,6 +32,26 @@ function lerp(a, b, t)
     return a + t*(b-a)
 end
 
+---
+-- Clamps a value to a certain range.
+-- @param min - The minimum value.
+-- @param val - The value to clamp.
+-- @param max - The maximum value.
+--
+function clamp(min, val, max)
+    return math.max(min, math.min(val, max));
+end
+
+---
+-- Clamps a value to a certain range.
+-- @param min - The minimum value.
+-- @param val - The value to clamp.
+-- @param max - The maximum value.
+--
+function clampAbs(val, max)
+    return math.max(-max, math.min(val, max));
+end
+
 -- return a value between 0 and 1, depending on where value is between min and
 -- max, clamping if it's outside.
 function step(min, max, value)
@@ -41,5 +61,36 @@ function step(min, max, value)
         return 1
     else
         return (value-min)/(max-min)
+    end
+end
+
+-- From http://lua-users.org/wiki/CopyTable:
+function deepcopy(orig, copies)
+    copies = copies or {}
+    local orig_type = type(orig)
+    local copy
+    if orig_type == 'table' then
+        if copies[orig] then
+            copy = copies[orig]
+        else
+            copy = {}
+            copies[orig] = copy
+            for orig_key, orig_value in next, orig, nil do
+                copy[deepcopy(orig_key, copies)] = deepcopy(orig_value, copies)
+            end
+            setmetatable(copy, deepcopy(getmetatable(orig), copies))
+        end
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
+-- Remove an item from a table by value.
+function removeValue(theTable, val)
+    for i,v in pairs(theTable) do
+        if v == val then
+            table.remove(theTable, i)
+        end
     end
 end
