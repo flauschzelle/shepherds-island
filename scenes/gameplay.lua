@@ -2,20 +2,21 @@ local scene = {}
 
 function scene:enter()
     self.child_rotation = 0
-    self.child_x = CANVAS_WIDTH / 2
-    self.child_y = CANVAS_HEIGHT / 2
+    self.player = Cursor:new("image", "stop")
+    self.player:setImage(images.child)
+
 end
 
 function scene:update(dt)
     self.child_rotation = self.child_rotation+dt*2
-    self.child_x = self.child_x + input:getX() * 10
-    self.child_y = self.child_y + input:getY() * 10
+    self.player:setImageRotation(self.child_rotation)
+    self.player:move()
 end
 
 function scene:draw()
     love.graphics.setColor(1, 1, 1) --white
 
-    love.graphics.draw(images.child, self.child_x, self.child_y, self.child_rotation, 1, 1, images.child:getWidth()/2, images.child:getHeight()/2)
+    self.player:draw()
 end
 
 function scene:handleInput()
