@@ -5,17 +5,14 @@ tlfres = require "lib.tlfres"
 class = require 'lib.middleclass' -- see https://github.com/kikito/middleclass
 libroomy = require 'lib.roomy' -- see https://github.com/tesselode/roomy
 Input = require "lib.input.Input"
-input = nil
 Cursor = require "cursor"
 
--- boilerplate:
 CANVAS_WIDTH = 1920
 CANVAS_HEIGHT = 1080
 roomy = libroomy.new() -- roomy is the manager for all the rooms (scenes) in our game
 scenes = {} -- initialize list of scenes
 
 function love.load()
-    -- boilerplate:
     -- initialize randomness in two ways:
     love.math.setRandomSeed(os.time())
     math.randomseed(os.time())
@@ -72,7 +69,6 @@ function love.load()
 end
 
 function love.update(dt)
-    -- boilerplate:
     input:update(dt)
     handleInput()
     roomy:emit("handleInput")
@@ -80,7 +76,6 @@ function love.update(dt)
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
-    -- boilerplate:
     input:mouseMoved(dx, dy)
 end
 
@@ -90,7 +85,6 @@ function love.mouse.getPosition()
 end
 
 function handleInput()
-     -- boilerplate:
     if input:isPressed("quit") then
         love.window.setFullscreen(false)
         love.event.quit()
@@ -102,7 +96,6 @@ function handleInput()
 end
 
 function love.draw()
-    -- boilerplate:
     love.graphics.setColor(1, 1, 1) -- white
     tlfres.beginRendering(CANVAS_WIDTH, CANVAS_HEIGHT)
 
@@ -110,10 +103,8 @@ function love.draw()
     -- Show this somewhere to the user so they know where to configure
     love.graphics.printf("Edit '" .. configFilePath .. "' to configure the input mapping.", 0, 990, CANVAS_WIDTH, "center")
 
-    -- game specific:
     -- draw scene-specific stuff:
     roomy:emit("draw")
-    --  update draing to love.graphics.draw(images.child, child_x, child_y, child_rotation, 1, 1, images.child:getWidth()/2, images.child:getHeight()/2)
 
     tlfres.endRendering()
 end
