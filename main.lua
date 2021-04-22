@@ -3,7 +3,7 @@ vector = require "lib.hump.vector"
 tlfres = require "lib.tlfres"
 local class = require 'lib.middleclass' -- see https://github.com/kikito/middleclass
 
-require "helpers"
+require "lib.helpers"
 
 CANVAS_WIDTH = 1920
 CANVAS_HEIGHT = 1080
