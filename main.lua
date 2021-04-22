@@ -46,6 +46,8 @@ function love.load()
             end
         end
     end
+    love.graphics.setNewFont(40) -- initialize default font size
+
 end
 
 function love.update(dt)
