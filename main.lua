@@ -64,7 +64,7 @@ function love.load()
             scenes[sceneName] = require ("scenes."..sceneName)
         end
     end
-    roomy:hook({exclude = {"draw"}}) --hook roomy in to manage the scenes (with exceptions)
+    roomy:hook({exclude = {"draw", "update"}}) --hook roomy in to manage the scenes (with exceptions)
     roomy:enter(scenes.title) --start on title screen
 
     input = Input:new()
@@ -75,6 +75,7 @@ function love.update(dt)
     input:update(dt)
     handleInput()
     roomy:emit("handleInput")
+    roomy:emit("update", dt)
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
