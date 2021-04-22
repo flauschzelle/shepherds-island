@@ -11,4 +11,12 @@ function scene:handleInput()
     end
 end
 
+function scene:enter()
+    love.mouse.setRelativeMode(false)
+end
+
+function scene:leave()
+    love.mouse.setRelativeMode(true)
+end
+
 return scene
