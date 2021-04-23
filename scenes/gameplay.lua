@@ -24,7 +24,10 @@ end
 
 function scene:handleInput()
     if input:isPressed("click") then
-        if levelManager.currentLevel():isWon() then
+        if levelManager.currentLevel().started == false then
+            -- start level from intro
+            levelManager.currentLevel():start()
+        elseif levelManager.currentLevel():isWon() then
             if nextLevel() == false then    -- goes to next level if there is one
                 roomy:enter(scenes.credits) -- show credits screen
             end
