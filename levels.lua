@@ -4,9 +4,16 @@
 local Level = class("Level")
 
 function Level:initialize(name, content, outro)
+
     self.name = name
     self.content = content
-    self.outro = outro
+
+    if outro ~= nil then
+        self.outro = outro
+    else
+        self.outro = "Congratulations, you won! Click to continue."
+    end
+
     self.won = false
 end
 
@@ -37,8 +44,8 @@ function nextLevel()
 end
 
 -- define levels
-first = Level:new("First level", "this is the first level. Press N to win.", "Congratulations, you won! Click to go to the next level.")
-second = Level:new("Second level", "this is the second level. Press N to win.", "Congratulations, you won! Click to continue.")
+first = Level:new("First level", "this is the first level. Press N to win.")
+second = Level:new("Second level", "this is the second level. Press N to win.")
 
 -- put all the levels into a list
 levels = {
