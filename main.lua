@@ -50,11 +50,13 @@ function love.load()
     love.graphics.setNewFont(40) -- initialize default font size
 
     -- levels
-    ind = 0
+    basenames = {}
     for file in listUsefulFiles("levels") do
-        -- TODO: the list of filenames should be sorted to ensure the correct order of levels
-        ind = ind + 1
-        levels[ind] = require ("levels." .. file.basename)
+        table.insert(basenames, file.basename)
+    end
+    table.sort(basenames) --sort level filenames in alphabetical order
+    for i, level in ipairs(basenames) do
+        levels[i] = require ("levels." .. level)
     end
 
     initLevelManager() -- this must be done after the levels are loaded from the filesystem
