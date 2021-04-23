@@ -58,6 +58,11 @@ keymapping = {
         keys = {"s", "down", "kp2"},
         joystickButtons = {}
     },
+    cheat = {
+        mouseButtons = {},
+        keys = {"n"},
+        joystickButtons = {}
+    },
 }
 
 -- Gamepads usually have two axes per analog stick, one of which is the x axis, 

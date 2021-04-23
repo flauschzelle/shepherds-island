@@ -6,6 +6,7 @@ class = require 'lib.middleclass' -- see https://github.com/kikito/middleclass
 libroomy = require 'lib.roomy' -- see https://github.com/tesselode/roomy
 Input = require "lib.input.Input"
 Cursor = require "cursor"
+Level = require "levels"
 
 CANVAS_WIDTH = 1920
 CANVAS_HEIGHT = 1080
