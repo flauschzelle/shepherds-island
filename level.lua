@@ -50,8 +50,11 @@ function nextLevel()
     if levelManager.current < levelManager.level_count then
         -- got to next level
         levelManager.current = levelManager.current + 1
-        -- reset previous level to not won
+        -- reset previous level to not won (and not started)
         levels[levelManager.current - 1].won = false
+        if levels[levelManager.current - 1].intro ~= nil then
+            levels[levelManager.current - 1].started = false
+        end
 
         return true
     else
