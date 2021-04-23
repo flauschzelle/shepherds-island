@@ -5,7 +5,18 @@ function scene:enter()
     self.child_rotation = 0
     self.player = Cursor:new("image", "stop")
     self.player:setImage(images.child)
+    self.music = music.ambient_starfield:play()
+end
 
+function scene:pause() 
+    self.musicPosition = self.music:tell()
+    self.music:pause()
+end
+
+function scene:resume() 
+    self.music:seek(self.musicPosition)
+    print ("Music position: " .. self.musicPosition)
+    self.music:play()
 end
 
 function scene:update(dt)
