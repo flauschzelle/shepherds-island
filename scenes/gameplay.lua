@@ -14,6 +14,10 @@ function scene:pause()
     self.music:pause()
 end
 
+function scene:leave()
+    self.music:stop()
+end
+
 function scene:resume()
     self.music:stop()
     self.music:play()
