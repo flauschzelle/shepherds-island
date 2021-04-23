@@ -1,5 +1,5 @@
 -- a class for levels 
--- and also a list of the levels to use in the game
+-- and some functions for managing them
 
 local Level = class("Level")
 
@@ -59,23 +59,18 @@ function nextLevel()
     end
 end
 
--- define levels
-first = Level:new("First level", "this is the first level. Press N to win.")
-second = Level:new("Second level", "this is the second level. Press N to win.", "Welcome to Level 2. Click to start playing!")
+-- initialize levels list:
+levels = {}
 
--- put all the levels into a list
-levels = {
-    first,
-    second,
-}
-
--- initialize level management:
-levelManager = {
-    current = 1, 
-    level_count = table.getn(levels),
-    currentLevel = function ()
-        return levels[levelManager.current]
-    end,
-}
+-- this must be called once after the levels have been loaded from files:
+function initLevelManager()
+    levelManager = {
+        current = 1, 
+        level_count = table.getn(levels),
+        currentLevel = function ()
+            return levels[levelManager.current]
+        end,
+    }
+end
 
 return Level

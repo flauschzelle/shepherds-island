@@ -6,7 +6,7 @@ class = require 'lib.middleclass' -- see https://github.com/kikito/middleclass
 libroomy = require 'lib.roomy' -- see https://github.com/tesselode/roomy
 Input = require "lib.input.Input"
 Cursor = require "cursor"
-Level = require "levels"
+Level = require "level"
 
 CANVAS_WIDTH = 1920
 CANVAS_HEIGHT = 1080
@@ -55,6 +55,19 @@ function love.load()
     end
 
     love.graphics.setNewFont(40) -- initialize default font size
+
+    -- levels
+    ind = 0
+    for i,filename in pairs(love.filesystem.getDirectoryItems("levels")) do
+        -- TODO: the list of filenames should be sorted to ensure the correct order of levels
+        if filename ~= ".gitkeep" then
+            ind = ind + 1
+            local levelName = filename:sub(1, -5)
+            levels[ind] = require ("levels."..levelName)
+        end
+    end
+
+    initLevelManager() -- this must be done after the levels are loaded from the filesystem
 
     -- scenes
     for i,filename in pairs(love.filesystem.getDirectoryItems("scenes")) do
