@@ -37,9 +37,15 @@ function scene:handleInput()
             sounds.meow:play()
         end
     end
+
     if input:isPressed("pause") then
         roomy:push(scenes.pause)
     end
+
+    if input:isPressed("menu") then
+        roomy:push(scenes.menu)
+    end
+
     -- cheat to win current level
     if input:isPressed("cheat") then
         levelManager.currentLevel().won = true
