@@ -1,4 +1,4 @@
--- Simple LÖVE Audio Manager
+-- Simple Lï¿½VE Audio Manager
 --
 -- Copyright (c) 2011 Matthias Richter
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -116,6 +116,30 @@ end
 
 function Source:isStatic()
 	return self.how ~= "stream"
+end
+
+function Source:tell(arg)
+	for s in pairs(self.instances) do
+        return s:tell(arg)
+    end
+end
+
+function Source:getDuration()
+	for s in pairs(self.instances) do
+        return s:getDuration()
+    end
+end
+
+function Source:seek(v)
+	for s in pairs(self.instances) do
+        return s:seek(v)
+    end
+end
+
+function Source:isPlaying()
+	for s in pairs(self.instances) do
+        return s:isPlaying()
+    end
 end
 
 -- getter/setter for looping, pitch and volume
