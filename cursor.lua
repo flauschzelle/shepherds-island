@@ -3,7 +3,7 @@
 -- like a player characters or a cursor in menu
 local Cursor = class("Cursor")
 
-function Cursor:initialize(graphicType, borderMode, pos_x, pos_y, speed)
+function Cursor:initialize(graphicType, borderMode, pos_x, pos_y, speed, grid_x, grid_y, grid_margins, grid_align_x, grid_align_y)
 
     -- image or geometry (default: geometry)
     if graphicType == "image" then
@@ -45,6 +45,49 @@ function Cursor:initialize(graphicType, borderMode, pos_x, pos_y, speed)
     else
         self.speed = 30 -- default
     end
+
+    -- for grid-bound cursors
+    if grid_x ~= nil then
+        self.grid_x = grid_x
+        self.grid_bound = true
+
+        if grid_y ~= nil then
+            self.grid_y = grid_y
+        else
+            self.grid_y = grid_x
+        end
+
+        if grid_margins ~= nil then
+            self.grid_margins = grid_margins
+        else
+            self.grid_margins = {top = 0, bottom = 0, left = 0, right = 0,}
+        end
+
+        if (grid_align_x == "left") or (grid_align_x == "right") then
+            self.grid_align_x = grid_align_x
+        else
+            self.grid_align_x = "center"
+        end
+
+        if (grid_align_y == "top") or (grid_align_y == "bottom") then
+            self.grid_align_y = grid_align_y
+        else
+            self.grid_align_y = "center"
+        end
+
+        self.grid_col_width = (CANVAS_WIDTH - (self.grid_margins.left + self.grid_margins.right))/grid_x
+        self.grid_row_height = (CANVAS_HEIGHT - (self.grid_margins.top + self.grid_margins.bottom))/grid_y
+
+        self.draw_pos_x = self.pos_x
+        self.draw_pos_y = self.pos_y
+
+        self.grid_col = 1
+        self.grid_row = 1
+
+    else
+        self.grid_bound = false
+    end
+
 end
 
 -- setters for image cursors only: --
@@ -144,16 +187,69 @@ function Cursor:setPosition(pos_x, pos_y)
         end
 
     end
+    -- correction for grid bound cursors
+    if self.grid_bound then
+        --set x position:
+        --TODO: correct for cursor size
+        local align_x = 0
+        if self.grid_align_x == "right" then
+            align_x = self.grid_col_width 
+        elseif self.grid_align_x == "center" then
+            align_x = (self.grid_col_width)/2
+        end
+
+        if self.pos_x < self.grid_margins.left then
+            self.draw_pos_x = self.grid_margins.left + align_x
+            self.grid_col = 1
+        elseif self.pos_x > (CANVAS_WIDTH - self.grid_margins.right) then
+            self.draw_pos_x = CANVAS_WIDTH - self.grid_margins.right - self.grid_col_width + align_x
+            self.grid_col = self.grid_x
+        else
+            self.grid_col = math.ceil((self.pos_x - self.grid_margins.left)/self.grid_col_width)
+            self.draw_pos_x = self.grid_margins.left + (self.grid_col-1)*self.grid_col_width + align_x
+        end
+
+        --set y position:
+        local align_y = 0
+        if self.grid_align_y == "bottom" then
+            align_y = self.grid_row_height
+        elseif self.grid_align_y == "center" then
+            align_y = self.grid_row_height/2
+        end
+        
+        if self.pos_y < self.grid_margins.top then
+            self.draw_pos_y = self.grid_margins.top + align_y
+            self.grid_row = 1
+        elseif self.pos_y > (CANVAS_HEIGHT - self.grid_margins.bottom) then
+            self.draw_pos_y = CANVAS_HEIGHT - self.grid_margins.bottom - self.grid_row_height + align_y
+            self.grid_row = self.grid_y
+        else
+            self.grid_row = math.ceil((self.pos_y - self.grid_margins.top)/self.grid_row_height)
+            self.draw_pos_y = self.grid_margins.top + (self.grid_row-1)*self.grid_row_height + align_y
+        end
+
+
+    end
 end
 
 
 function Cursor:draw()
+
+    local x = self.pos_x
+    local y = self.pos_y
+
+    -- correction for grid-bound cursors:
+    if self.grid_bound then
+        x = self.draw_pos_x
+        y = self.draw_pos_y
+    end
+
     if self.graphicType == "image" then
         -- draw image
-        love.graphics.draw(self.image, self.pos_x, self.pos_y, self.rotation, self.scale_x, self.scale_y, self.origin_offset_x, self.origin_offset_y)
+        love.graphics.draw(self.image, x, y, self.rotation, self.scale_x, self.scale_y, self.origin_offset_x, self.origin_offset_y)
     else
         -- draw geometry
-        self.geometry:draw(self.pos_x, self.pos_y)
+        self.geometry:draw(x, y)
     end
 
 end
