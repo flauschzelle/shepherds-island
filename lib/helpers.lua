@@ -94,3 +94,18 @@ function removeValue(theTable, val)
         end
     end
 end
+
+-- list the files in a directory, ignoring ".gitkeep" and return three variations of the filenames
+function listUsefulFiles(dirname)
+    f, t, k = pairs(love.filesystem.getDirectoryItems(dirname))
+    return function ()
+        k,v = f(t, k)
+        if v and v == ".gitkeep" then
+            k,v = f(t, k)
+        end
+        if v then
+            basename = v:match("(.+)%..+$") -- remove everything before the last period
+            return {basename = basename, filename = v, path = (dirname .. "/" .. v)}
+        end
+    end
+end

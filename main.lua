@@ -14,20 +14,6 @@ CANVAS_HEIGHT = 1080
 roomy = libroomy.new() -- roomy is the manager for all the rooms (scenes) in our game
 scenes = {} -- initialize list of scenes
 
-function listUsefulFiles(dirname)
-    f, t, k = pairs(love.filesystem.getDirectoryItems(dirname))
-    return function ()
-        k,v = f(t, k)
-        if v and v == ".gitkeep" then
-            k,v = f(t, k)
-        end
-        if v then
-            basename = v:match("(.+)%..+$") -- remove everything before the last period
-            return {basename = basename, filename = v, path = (dirname .. "/" .. v)}
-        end
-    end
-end
-
 function love.load()
     -- initialize randomness in two ways:
     love.math.setRandomSeed(os.time())
