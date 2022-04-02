@@ -104,7 +104,7 @@ function love.draw()
 
     -- (draw any global stuff here)
     -- Show this somewhere to the user so they know where to configure
-    love.graphics.printf("Edit '" .. configFilePath .. "' to configure the input mapping.", 0, 990, CANVAS_WIDTH, "center")
+    love.graphics.printf("Edit '" .. configFilePath .. "' to configure the input mapping.", 0, CANVAS_HEIGHT-90, CANVAS_WIDTH, "center")
 
     -- draw scene-specific stuff:
     roomy:emit("draw")

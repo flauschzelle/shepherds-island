@@ -2,9 +2,13 @@ local scene = {}
 
 function scene:enter()
     -- set up player cursor:
-    self.child_rotation = 0
-    self.player = Cursor:new("image", "stop")
-    self.player:setImage(images.child)
+    -- self.child_rotation = 0
+    -- level_grid_cols = levelManager.currentLevel().width
+    -- level_grid_rows = levelManager.currentLevel().height
+    -- level_grid_margins_x = levelManager.currentLevel().offsetX
+    -- level_grid_margins_y = levelManager.currentLevel().offsetY
+    -- self.player = Cursor:new("image", "stop", levelManager.currentLevel().playerX, levelManager.currentLevel().playerY, 50, level_grid_cols, level_grid_rows, {top = level_grid_margins_y, bottom = level_grid_margins_y, left = level_grid_margins_x, right = level_grid_margins_x}, "center", "center")
+    -- self.player:setImage(images.child)
     self.music = music.ambient_starfield
     self.music:play()
 end
@@ -27,16 +31,19 @@ end
 
 function scene:update(dt)
     -- update player cursor:
-    self.child_rotation = self.child_rotation+dt*2
-    self.player:setImageRotation(self.child_rotation)
-    self.player:move()
+    --self.child_rotation = self.child_rotation+dt*2
+    --self.player:setImageRotation(self.child_rotation)
+    --self.player:move()
+    -- update level:
+    levelManager.currentLevel():update(dt)
 end
 
 function scene:draw()
+    love.graphics.clear(0, 0, 0) -- black background
     love.graphics.setColor(1, 1, 1) --white
 
     levelManager.currentLevel():draw()
-    self.player:draw()
+    --self.player:draw()
 end
 
 function scene:handleInput()
@@ -67,6 +74,26 @@ function scene:handleInput()
     if input:isPressed("cheat") then
         levelManager.currentLevel().won = true
     end
+
+    -- actual level controls:
+    if levelManager.currentLevel().started == true then
+        local lvl = levelManager.currentLevel()
+        if input:isPressed("left") then
+            --go left
+            lvl:movePlayer(-1, 0)
+        end
+        if input: isPressed("right") then
+            --go right
+            lvl:movePlayer(1, 0)
+        end
+        if input:isPressed("up") then
+            --go up
+        end
+        if input:isPressed("down") then
+            --go down
+        end
+    end
+
 end
 
 return scene
