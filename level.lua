@@ -171,6 +171,9 @@ end
 function Level:nextState()
     -- advance tidal wave
     self:flood()
+    if self.grid[self.playerX][self.playerY] == "w" then
+        self:loseLevel("Oh no, you got hit by the water!")
+    end
     -- save state to history
     self:saveState()
 end
@@ -475,6 +478,11 @@ function Level:applyGravity(x)
                 else
                     self.grid[x][(y-1)+down] = "h" 
                 end
+            elseif tile == "w" and tile_below == "a" then
+                self.grid[x][y] = ""
+                self.grid[x][y+down] = tile
+                self.sheepCount = self.sheepCount -1
+                self:loseLevel("Don't let your sheep get wet!")
             end
             while (tile_below == "") and (down+y <= self.height) do
                 down = down+1
