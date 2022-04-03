@@ -358,11 +358,8 @@ function Level:liftObject()
             return
         end
         local view_tile = self.grid[self.playerX+side][self.playerY] 
-        if view_tile == "b" then
-            self.carrying = "b" --pick up bag from next tile
-            self.grid[self.playerX+side][self.playerY]  = ""
-        elseif view_tile == "a" then --pick up animal from next tile
-            self.carrying = "a"
+        if view_tile == "b" or view_tile == "a" or view_tile == "h" then
+            self.carrying = view_tile -- pick up object from the next tile
             self.grid[self.playerX+side][self.playerY]  = ""
         end
         -- apply gravity in case something was pulled out from under stuff:
@@ -408,6 +405,11 @@ function Level:setDownObject()
                     self.carrying = ""
                 else
                     self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on help
+                    self.carrying = ""
+                end
+            elseif view_down == "w" then
+                if self.carrying == "h" then
+                    self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on water
                     self.carrying = ""
                 end
             end
@@ -458,6 +460,8 @@ function Level:drawPlayer()
             sprite = "sheep"
         elseif self.carrying == "b" then
             sprite = "block"
+        elseif self.carrying == "h" then
+            sprite = "boat"
         end
         if sprite ~= "" then
             sprite = sprite.."_mini"
