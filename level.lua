@@ -262,7 +262,7 @@ function Level:flood()
                     nextY = nextY-1
                     print("flood: going up one row")
                 end
-                
+
             elseif nextY < startY then
                 -- reached top level of water
                 print("flood: reached top level at x="..nextX.." , y="..nextY)
@@ -469,8 +469,12 @@ function Level:applyGravity(x)
                 -- flooded the boat from above, oh no!
                 self.grid[x][y] = ""
                 self.grid[x][y+down] = tile
-                self.grid[x][(y-1)+down] = "h" 
-                --self:loseLevel("Oh no, the flood has sunken your boat!")
+                if self.grid[x+1][y+down] == "" then
+                    self.grid[x+1][y+down] = "h" --move boat to the right
+                    self:applyGravity(x+1) -- let boat fall down
+                else
+                    self.grid[x][(y-1)+down] = "h" 
+                end
             end
             while (tile_below == "") and (down+y <= self.height) do
                 down = down+1
