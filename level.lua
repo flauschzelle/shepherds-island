@@ -13,7 +13,7 @@ function Level:initialize(name, content, intro, outro)
 
     self.playerX = 1
     self.playerY = 1
-    self.playerImage = images.child_left
+    self.playerImage = images.shepherd
     self.playerLookingLeft = true
 
     self.carrying = ""
@@ -203,21 +203,24 @@ function Level:setDownObject()
 end
 
 function Level:drawPlayer()
-    love.graphics.setColor(1, 0.5, 0) --orange
+    love.graphics.setColor(1, 1, 1)
     local pos_x = (self.playerX-0.5)*self.tileSize+self.offsetX
     local pos_y = (self.playerY-0.5)*self.tileSize+self.offsetY
     local scalex = 1
     if self.playerLookingLeft == false then
         scalex = -1
     end
-    love.graphics.draw(self.playerImage, pos_x, pos_y, 0, scalex, 1, self.playerImage:getWidth()/2, self.playerImage:getHeight()/2)
+    love.graphics.draw(self.playerImage, pos_x, pos_y, 0, scalex*self.tileSize/16, self.tileSize/16, self.playerImage:getWidth()/2, self.playerImage:getHeight()/2)
     if self.carrying ~= "" then
+        local sprite = ""
         if self.carrying == "a" then
-            love.graphics.setColor(1.0, 0.8, 0.8) --pink
+            sprite = "sheep"
         elseif self.carrying == "b" then
-            love.graphics.setColor(0.8, 0.8, 0.4) --beige
+            sprite = "block"
         end
-        love.graphics.circle("fill", pos_x, pos_y-(self.tileSize*0.6), self.tileSize*0.3)
+        if sprite ~= "" then
+            love.graphics.draw(images[sprite], pos_x, pos_y-(self.tileSize*0.7), 0, self.tileSize/16/2, self.tileSize/16/2, images[sprite]:getWidth()/2, images[sprite]:getHeight()/2)
+        end
     end
 end
 
