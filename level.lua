@@ -99,6 +99,7 @@ function Level:initialize(name, map, intro, outro)
 
     self.started = false
     self.won = false
+    self.lost = false
 
     -- nil is acceptable as a default value here!
     self.intro = intro
@@ -130,6 +131,7 @@ function Level:saveState()
     state.sheepCount = self.sheepCount
     state.sheepSaved = self.sheepSaved
     state.carrying = self.carrying
+    state.lost = self.lost
     -- save frame to history
     table.insert(self.history, state)
     --print(#self.history)
@@ -154,6 +156,7 @@ function Level:popState(restart)
     self.sheepCount = state.sheepCount
     self.sheepSaved = state.sheepSaved
     self.carrying = state.carrying
+    self.lost = state.lost
 
     if restart then
         -- clear history
@@ -216,7 +219,7 @@ function Level:flood()
         self:applyGravity(nextX+1)      -- let it fall down
         print("flood:successful")
         return
-    elseif nextX == self.width or self.grid[nextX+1][nextY] == "g" or self.grid[nextX+1][nextY] == "b" or self.grid[nextX+1][nextY] == "h" or self.grid[nextX+1][nextY] == "a" then
+    elseif nextX == self.width or self.grid[nextX+1][nextY] == "g" or self.grid[nextX+1][nextY] == "b" or self.grid[nextX+1][nextY] == "h" then
         print("flood: found end of layer")
         -- go one row up
         nextY = nextY-1
@@ -247,7 +250,13 @@ function Level:flood()
                 return
             end
         end
+    elseif self.grid[nextX+1][nextY] == "a" then
+        -- flooded a sheep, oh no!
+        self.grid[nextX+1][nextY] = "w" -- set water
+        self.sheepCount = self.sheepCount - 1 --remove sheep
+        self:loseLevel()
     end
+
     -- surface is even/full, start new wave
     print("flood:starting new layer")
     if self.grid[startX][startY-1] == "" then
@@ -271,6 +280,10 @@ function Level:update(dt)
     if self.sheepSaved == self.sheepToSave then
         self.won = true
     end
+end
+
+function Level:loseLevel()
+    self.lost = true
 end
 
 function Level:isBlocked(x, y)
@@ -412,8 +425,16 @@ function Level:applyGravity(x)
                 tile_below = self.grid[x][y+down]
             end
             if down > 1 and (self:isBlocked(x, y+down) or (y+down == self.height+1)) then
-                self.grid[x][y+down-1] = tile
-                self.grid[x][y] = ""
+                if tile == "w" and tile_below == "a" then
+                    -- flooded a sheep, oh no!
+                    self.grid[x][y] = ""
+                    self.grid[x][y+down] = tile
+                    self.sheepCount = self.sheepCount - 1 --remove sheep
+                    self:loseLevel()
+                else
+                    self.grid[x][y+down-1] = tile
+                    self.grid[x][y] = ""
+                end
             end
         end
     end
@@ -490,6 +511,10 @@ function Level:draw()
     else
         self:drawGrid()
         self:drawPlayer()
+        if self.lost then
+            local lostMessage = "Don't let your sheep get wet!\nPress "..Input:getKeyString("reset").." to restart\nor "..Input:getKeyString("back").." to undo one step."
+            love.graphics.printf(lostMessage, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
+        end
     end
 end
 
