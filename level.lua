@@ -29,7 +29,7 @@ function Level:initialize(name, map, intro, outro)
 
     for line in magiclines(self.map) do
         table.insert(mapRows, line)
-        print(line)
+        --print(line)
     end
     self.height = #mapRows
     self.width = 0
@@ -54,7 +54,7 @@ function Level:initialize(name, map, intro, outro)
     self.offsetY = (CANVAS_HEIGHT - self.height*self.tileSize)/2
 
     -- load starting map
-    print(#mapRows.." rows of content in this map")
+    --print(#mapRows.." rows of content in this map")
     for y = 1, self.height do
         for x = 1, self.width do
             if #mapRows[y] >= x then
