@@ -109,8 +109,10 @@ function scene:handleInput()
         if input:isPressed("back") then
             lvl:popState()
         end
+        if input:isPressed("reset") then
+            lvl:popState(true) -- restart = true
+        end
     end
-
 end
 
 return scene

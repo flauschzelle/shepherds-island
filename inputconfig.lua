@@ -63,6 +63,11 @@ keymapping = {
         keys = {"z", "u", "y", "backspace", "delete"},
         joystickButtons = {}
     },
+    reset = {
+        mouseButtons = {},
+        keys = {"r"},
+        joystickButtons = {}
+    },
     cheat = {
         mouseButtons = {},
         keys = {"n"},

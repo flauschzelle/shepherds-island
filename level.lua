@@ -135,13 +135,18 @@ function Level:saveState()
     --print(#self.history)
 end
 
-function Level:popState()
+function Level:popState(restart)
+    restart = restart or false
     -- make sure there is something to pop
     if #self.history < 2 then
         return
     end
+    local frame = #self.history-1
+    if restart then
+        frame = 1
+    end
     -- copy data from history
-    local state = deepcopy(self.history[#self.history-1])
+    local state = deepcopy(self.history[frame])
     self.grid = state.grid
     self.playerX = state.playerX
     self.playerY = state.playerY
@@ -149,9 +154,15 @@ function Level:popState()
     self.sheepCount = state.sheepCount
     self.sheepSaved = state.sheepSaved
     self.carrying = state.carrying
-    -- remove last history frame
-    table.remove(self.history, #self.history)
-    print(#self.history)
+
+    if restart then
+        -- clear history
+        self.history = {}
+        self:saveState()
+    else
+        -- remove last history frame
+        table.remove(self.history, #self.history)
+    end
 end
 
 function Level:nextState()
