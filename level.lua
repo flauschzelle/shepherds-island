@@ -344,6 +344,11 @@ function Level:drawGrid()
     -- draw tiles:
     for x, col in ipairs(self.grid) do
         for y, tile in ipairs(col) do
+            -- Always draw blue tile background.
+            love.graphics.setColor(65/255, 166/255, 246/255) -- Sweetie 16 light blue
+            love.graphics.rectangle("fill", self.offsetX+(x-1)*self.tileSize, self.offsetY + (y-1)*self.tileSize, self.tileSize, self.tileSize)
+            love.graphics.setColor(1, 1, 1)
+
             local sprite = ""
             if tile == "w" then
                 sprite = "water"
