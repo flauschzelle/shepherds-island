@@ -15,6 +15,7 @@ function Level:initialize(name, map, intro, outro)
     self.playerLookingLeft = true
 
     self.carrying = ""
+    self.playerOnBoat = false
 
     --self.playerSpeed = 30
 
@@ -133,6 +134,7 @@ function Level:saveState()
     state.sheepSaved = self.sheepSaved
     state.carrying = self.carrying
     state.lost = self.lost
+    state.playerOnBoat = self.playerOnBoat
     -- save frame to history
     table.insert(self.history, state)
     --print(#self.history)
@@ -158,6 +160,7 @@ function Level:popState(restart)
     self.sheepSaved = state.sheepSaved
     self.carrying = state.carrying
     self.lost = state.lost
+    self.playerOnBoat = state.playerOnBoat
 
     if restart then
         -- clear history
@@ -224,6 +227,10 @@ function Level:flood()
         print("flood:successful")
         if self.grid[nextX][nextY-1] == "h" then
             self.grid[nextX+1][nextY-1] = "h" -- move boat
+            if self.playerOnBoat then --move player with boat
+                self.playerX = nextX+1
+                self.playerY = nextY-1
+            end 
             self.grid[nextX][nextY-1] = "" -- put air where it was
             self:applyGravity(nextX+1)      -- let it fall down
         end
@@ -248,6 +255,10 @@ function Level:flood()
                 elseif self.grid[nextX+1][nextY] == "h" then
                     if nextX+1 < self.width and self.grid[nextX+2][nextY] == "" then
                         self.grid[nextX+2][nextY] = "h" -- move boat
+                        if self.playerOnBoat then --move player with boat
+                            self.playerX = nextX+2
+                            self.playerY = nextY
+                        end 
                         self.grid[nextX+1][nextY] = "w" -- put water there
                         self:applyGravity(nextX+1)      -- let the water fall down
                         self:applyGravity(nextX+2)      -- let the boat fall down
@@ -255,6 +266,10 @@ function Level:flood()
                         return
                     elseif self.grid[nextX+1][nextY-1] == "" then
                         self.grid[nextX+1][nextY-1] = "h" -- move boat 
+                        if self.playerOnBoat then --move player with boat
+                            self.playerX = nextX+1
+                            self.playerY = nextY-1
+                        end 
                         self.grid[nextX+1][nextY] = "w" -- put water there
                         print("flood:successful")
                         return
@@ -281,6 +296,10 @@ function Level:flood()
     elseif self.grid[nextX+1][nextY] == "h" then
         if nextX+1 < self.width and self.grid[nextX+2][nextY] == "" then
             self.grid[nextX+2][nextY] = "h" -- move boat
+            if self.playerOnBoat then --move player with boat
+                self.playerX = nextX+2
+                self.playerY = nextY
+            end 
             self.grid[nextX+1][nextY] = "w" -- put water there
             self:applyGravity(nextX+1)      -- let the water fall down
             self:applyGravity(nextX+2)      -- let the boat fall down
@@ -288,6 +307,10 @@ function Level:flood()
             return
         elseif self.grid[nextX+1][nextY-1] == "" then
             self.grid[nextX+1][nextY-1] = "h" -- move boat 
+            if self.playerOnBoat then --move player with boat
+                self.playerX = nextX+1
+                self.playerY = nextY-1
+            end 
             self.grid[nextX+1][nextY] = "w" -- put water there
             print("flood:successful")
             return
@@ -324,7 +347,7 @@ end
 
 function Level:update(dt)
     if self.sheepSaved == self.sheepToSave then -- have we saved all sheep?
-        if self.grid[self.playerX][self.playerY+1] == "h" then -- are we save?
+        if self.playerOnBoat then -- are we safe?
             self.won = true
         end
     end
@@ -343,8 +366,8 @@ function Level:isBlocked(x, y)
         return true
     elseif tile == "b" then 
         return true
-    elseif tile == "h" then 
-        return true
+    --elseif tile == "h" then 
+        --return true
     elseif tile == "a" then 
         return true
     else
@@ -388,6 +411,8 @@ function Level:movePlayer(x, y)
         if look_down == "w" then -- but don't jump into water
             newX = self.playerX
             newY = self.playerY
+        elseif look_down == "h" then -- jump into boat
+            newY = newY+1
         end
 
     end
@@ -395,6 +420,11 @@ function Level:movePlayer(x, y)
     -- set new position
     self.playerX = newX
     self.playerY = newY
+    if self.grid[self.playerX][self.playerY] == "h" then
+        self.playerOnBoat = true
+    else
+        self.playerOnBoat = false
+    end
 end
 
 function Level:liftObject()
@@ -477,9 +507,17 @@ function Level:applyGravity(x)
                 self.grid[x][y+down] = tile
                 if self.grid[x+1][y+down] == "" then
                     self.grid[x+1][y+down] = "h" --move boat to the right
+                    if self.playerOnBoat then -- move player with boat
+                        self.playerX = x+1
+                        self.playerY = y+down
+                    end
                     self:applyGravity(x+1) -- let boat fall down
                 else
-                    self.grid[x][(y-1)+down] = "h" 
+                    self.grid[x][(y-1)+down] = "h"
+                    if self.playerOnBoat then --move player with boat
+                        self.playerX = x
+                        self.playerY = (y-1)+down
+                    end 
                 end
             elseif tile == "w" and tile_below == "a" then
                 self.grid[x][y] = ""
@@ -491,7 +529,7 @@ function Level:applyGravity(x)
                 down = down+1
                 tile_below = self.grid[x][y+down]
             end
-            if down > 1 and (self:isBlocked(x, y+down) or (y+down == self.height+1)) then
+            if down > 1 and (self:isBlocked(x, y+down) or self.grid[x][y+down] == "h" or (y+down == self.height+1)) then
                 if tile == "w" and tile_below == "a" then
                     -- flooded a sheep, oh no!
                     self.grid[x][y] = ""
@@ -502,6 +540,15 @@ function Level:applyGravity(x)
                         self.grid[x][y] = ""
                         self.grid[x][y+down] = tile
                         self.grid[x][(y-1)+down] = "h" 
+                        if self.playerOnBoat then --move player with boat
+                            self.playerX = x
+                            self.playerY = (y-1)+down
+                        end 
+                elseif tile == "h" and self.playerOnBoat then
+                        self.grid[x][y+down-1] = tile
+                        self.grid[x][y] = ""
+                        self.playerX = x       -- move player with boat
+                        self.playerY = y+down-1
                 else
                     self.grid[x][y+down-1] = tile
                     self.grid[x][y] = ""
