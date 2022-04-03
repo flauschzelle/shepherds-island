@@ -186,6 +186,11 @@ function Level:flood()
             end
         end
     end
+
+    if startX == 0 then -- no water
+        return
+    end
+    
     ::found_start::
     print("flood: found starting point")
     -- go along the water surface
@@ -358,11 +363,13 @@ function Level:setDownObject()
         if view_tile == "" then -- if there is room
             local down = 1
             local view_down = self.grid[self.playerX+side][self.playerY+down]
+            print(view_down)
             while view_down == "" do
                 down = down+1
                 view_down = self.grid[self.playerX+side][self.playerY+down]
+                print(view_down)
             end
-            if self.playerX+down > self.height then
+            if self.playerY+down > self.height then
                 self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on level floor
                 self.carrying = ""
             elseif view_down == "g" then
