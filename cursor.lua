@@ -152,6 +152,13 @@ function Cursor:move()
     self:setPosition(x, y)
 end
 
+function Cursor:step(x, y, size)
+    local pos_x = self.pos_x + (x*size)
+    local pos_y = self.pos_y + (y*size)
+    self:setPosition(pos_x, pos_y)
+end
+
+
 function Cursor:setPosition(pos_x, pos_y)
     self.pos_x = pos_x
     self.pos_y = pos_y
