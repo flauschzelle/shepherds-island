@@ -16,6 +16,8 @@ function Level:initialize(name, content, intro, outro)
     self.playerImage = images.child_left
     self.playerLookingLeft = true
 
+    self.carrying = ""
+
     --self.playerSpeed = 30
 
     -- initialize grid
@@ -96,6 +98,8 @@ function Level:isBlocked(x, y)
         return true
     elseif tile == "b" then 
         return true
+    elseif tile == "h" then 
+        return true
     else
         return false
     end
@@ -144,6 +148,58 @@ function Level:movePlayer(x, y)
     self.playerY = newY
 end
 
+function Level:liftObject()
+    if self.carrying == "" then -- carry only one object at at time
+        local side = 1
+        if self.playerLookingLeft then
+            side = -1
+        end
+        local view_tile = self.grid[self.playerX+side][self.playerY] 
+        if view_tile == "b" then
+            self.carrying = "b" --pick up bag from next tile
+            self.grid[self.playerX+side][self.playerY]  = ""
+        elseif view_tile == "a" then --pick up animal from next tile
+            self.carrying = "a"
+            self.grid[self.playerX+side][self.playerY]  = ""
+        end
+    end
+end
+
+function Level:setDownObject()
+    if self.carrying ~= "" then
+        local side = 1
+        if self.playerLookingLeft then
+            side = -1
+        end
+        local view_tile = self.grid[self.playerX+side][self.playerY] 
+        if view_tile == "" then -- if there is room
+            local down = 1
+            local view_down = self.grid[self.playerX+side][self.playerY+down]
+            while view_down == "" do
+                down = down+1
+                view_down = self.grid[self.playerX+side][self.playerY+down]
+            end
+            if self.playerX+down > self.height then
+                self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on level floor
+                self.carrying = ""
+            elseif view_down == "g" then
+                self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on ground
+                self.carrying = ""
+            elseif view_down == "b" then
+                self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on bag
+                self.carrying = ""
+            elseif view_down == "a" then
+                self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on animal
+                self.carrying = ""
+            elseif view_down == "h" then
+                self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on help
+                self.carrying = ""
+            end
+
+        end
+    end
+end
+
 function Level:drawPlayer()
     love.graphics.setColor(1, 0.5, 0) --orange
     local pos_x = (self.playerX-0.5)*self.tileSize+self.offsetX
@@ -153,6 +209,14 @@ function Level:drawPlayer()
         scalex = -1
     end
     love.graphics.draw(self.playerImage, pos_x, pos_y, 0, scalex, 1, self.playerImage:getWidth()/2, self.playerImage:getHeight()/2)
+    if self.carrying ~= "" then
+        if self.carrying == "a" then
+            love.graphics.setColor(1.0, 0.8, 0.8) --pink
+        elseif self.carrying == "b" then
+            love.graphics.setColor(0.8, 0.8, 0.4) --beige
+        end
+        love.graphics.circle("fill", pos_x, pos_y-(self.tileSize*0.6), self.tileSize*0.3)
+    end
 end
 
 function Level:drawGrid()
@@ -166,7 +230,7 @@ function Level:drawGrid()
             elseif tile == "h" then
                 love.graphics.setColor(0.5, 0.3, 0.1) --brown
             elseif tile == "a" then
-                love.graphics.setColor(1.0, 0.9, 0.9) --pink
+                love.graphics.setColor(1.0, 0.8, 0.8) --pink
             elseif tile == "b" then
                 love.graphics.setColor(0.8, 0.8, 0.4) --beige
             else

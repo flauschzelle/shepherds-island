@@ -95,10 +95,12 @@ function scene:handleInput()
             end
         end
         if input:isPressed("up") then
-            --go up
+            -- pick up thing
+            lvl:liftObject()
         end
         if input:isPressed("down") then
-            --go down
+            -- put down thing
+            lvl:setDownObject()
         end
     end
 
