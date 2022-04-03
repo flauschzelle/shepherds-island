@@ -2,11 +2,11 @@ name = "Sheep rescue"
 map = [[
 
 
- b
-hgg    g
-  g    g
-  gapbbg
-  gggggg
+         b
+         gg    gh
+         gg    gw
+         ggapbbgw
+wwwwwwwwwgggggggw
 ]]
 
 
