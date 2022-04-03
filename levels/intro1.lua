@@ -2,10 +2,10 @@ name = "Intro 1"
 map = [[
 
 
-        p a
-     a ggggg a
-     gggggggggh
-wwwwggggggggggwwww
+         p a
+      a ggggg a
+      gggggggggh
+wwwwwggggggggggwwww
 ]]
 
 intro = ""

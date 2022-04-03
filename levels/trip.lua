@@ -1,12 +1,12 @@
 name = "Dry dock"
 map = [[
 
-
-   g
-  gg                 a  a
-wggg p h           ggggggggg
-gggggggggwwwwwwwgggggggggggg
-gggggggggggggggggggggggggggg
+    h
+   ggg
+  ggggg                 a  a
+wggggggg p             ggggggggg
+gggggggggggggwwwwwwwgggggggggggg
+gggggggggggggggggggggggggggggggg
 ]]
 
 intro = ""

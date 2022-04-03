@@ -11,6 +11,7 @@ function Level:initialize(name, map, intro, outro)
     self.playerX = 1
     self.playerY = 1
     self.playerImage = images.shepherd
+    self.playerImageCarrying = images.shepherd_carrying
     self.playerLookingLeft = true
 
     self.carrying = ""
@@ -511,7 +512,8 @@ function Level:drawPlayer()
     if self.playerLookingLeft == false then
         scalex = -1
     end
-    love.graphics.draw(self.playerImage, pos_x, pos_y, 0, scalex*self.tileSize/16, self.tileSize/16, self.playerImage:getWidth()/2, self.playerImage:getHeight()/2)
+    local image = self.carrying == "" and self.playerImage or self.playerImageCarrying
+    love.graphics.draw(image, pos_x, pos_y, 0, scalex*self.tileSize/16, self.tileSize/16, self.playerImage:getWidth()/2, self.playerImage:getHeight()/2)
     if self.carrying ~= "" then
         local sprite = ""
         if self.carrying == "a" then

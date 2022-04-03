@@ -4,8 +4,8 @@ map = [[
 
      g
     gg
-   ggg
-h gggg               a
+ h ggg
+wwgggg               a
 wggggg      p bbbbbbbg
 gggggggggggggggggggggg
 ]]
