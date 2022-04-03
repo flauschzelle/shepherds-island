@@ -63,7 +63,12 @@ function Level:initialize(name, content, intro, outro)
         end
     end
 
-    
+    -- make sure nothing is floating in the air:
+    for x = 1, self.width do
+        self:applyGravity(x)
+    end
+
+
     -- initialize level state
 
     self.started = false
@@ -164,6 +169,8 @@ function Level:liftObject()
             self.carrying = "a"
             self.grid[self.playerX+side][self.playerY]  = ""
         end
+        -- apply gravity in case something was pulled out from under stuff:
+        self:applyGravity(self.playerX+side)
     end
 end
 
@@ -201,6 +208,25 @@ function Level:setDownObject()
         end
     end
 end
+
+function Level:applyGravity(x)
+    for y = self.height-1, 1, -1 do
+        local tile = self.grid[x][y]
+        if tile == "a" or tile == "b" then
+            local down = 1
+            local tile_below = self.grid[x][y+down]
+            while (tile_below == "") and (down+y <= self.height) do
+                down = down+1
+                tile_below = self.grid[x][y+down]
+            end
+            if down > 1 and (self:isBlocked(x, y+down) or (y+down == self.height+1)) then
+                self.grid[x][y+down-1] = tile
+                self.grid[x][y] = ""
+            end
+        end
+    end
+end
+
 
 function Level:drawPlayer()
     love.graphics.setColor(1, 1, 1)
