@@ -278,7 +278,7 @@ function Level:flood()
                         return
                     else
                         self.grid[nextX+1][nextY] = "w" --replace boat with water
-                        self:loseLevel("oh no, you broke your boat!")
+                        self:loseLevel("oh no, your boat got crushed by the water!")
                         return
                     end
                 else
