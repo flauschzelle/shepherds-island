@@ -82,6 +82,18 @@ function Level:initialize(name, map, intro, outro)
         self:applyGravity(x)
     end
 
+    -- count sheep
+    self.sheepCount = 0
+    for x, c in ipairs(self.grid) do
+        for y, t in ipairs (self.grid[x]) do
+            if t == "a" then
+                self.sheepCount = self.sheepCount + 1
+            end
+        end
+    end
+
+    self.sheepToSave = self.sheepCount
+    self.sheepSaved = 0
 
     -- initialize level state
 
@@ -105,8 +117,9 @@ function Level:initialize(name, map, intro, outro)
 end
 
 function Level:update(dt)
-    -- todo
-    
+    if self.sheepSaved == self.sheepToSave then
+        self.won = true
+    end
 end
 
 function Level:isBlocked(x, y)
@@ -215,8 +228,14 @@ function Level:setDownObject()
                 self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on animal
                 self.carrying = ""
             elseif view_down == "h" then
-                self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on help
-                self.carrying = ""
+                if self.carrying == "a" then
+                    self.sheepCount = self.sheepCount - 1
+                    self.sheepSaved = self.sheepSaved + 1
+                    self.carrying = ""
+                else
+                    self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on help
+                    self.carrying = ""
+                end
             end
 
         end
@@ -285,9 +304,16 @@ function Level:drawGrid()
                                    self.offsetY + (y - 1) * self.tileSize, 0, self.tileSize / 16,
                                    self.tileSize / 16)
             end
+            -- draw saved sheep on boat
+            if tile == "h" and self.sheepSaved > 0 then
+                for i = 1, self.sheepSaved do
+                    love.graphics.draw(images["sheep"], 2*i*(self.tileSize/16) + self.tileSize*0.3 + self.offsetX + (x - 1) * self.tileSize,
+                   2* (i%2)*self.tileSize/16 + self.offsetY + (y - 0.5) * self.tileSize, 0, self.tileSize / 16/3,
+                    self.tileSize / 16/3, images["sheep"]:getWidth()/2, images["sheep"]:getHeight()/2)
+                end
+            end
         end
     end
-
 end
 
 
