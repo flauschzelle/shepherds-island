@@ -100,6 +100,8 @@ function Level:isBlocked(x, y)
         return true
     elseif tile == "h" then 
         return true
+    elseif tile == "a" then 
+        return true
     else
         return false
     end
