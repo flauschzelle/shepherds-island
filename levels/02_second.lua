@@ -1,12 +1,12 @@
-name = ""
+name = "Sheep rescue"
 map = [[
 
 
-
-
-g    g
-gapb g
-gggggg
+ b
+hgg    g
+  g    g
+  gapbbg
+  gggggg
 ]]
 
 
