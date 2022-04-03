@@ -166,10 +166,98 @@ function Level:popState(restart)
 end
 
 function Level:nextState()
-    -- save state to hostory
+    -- advance tidal wave
+    self:flood()
+    -- save state to history
     self:saveState()
-    -- advance water
-    -- TODO
+end
+
+function Level:flood()
+    --find starting point for flood:
+    print("flood:looking for starting point..")
+    local startX = 0
+    local startY = 0
+    for x, c in ipairs(self.grid) do
+        for y, t in ipairs (self.grid[x]) do
+            if t == "w" then
+                    startX = x
+                    startY = y
+                    goto found_start
+            end
+        end
+    end
+    ::found_start::
+    print("flood: found starting point")
+    -- go along the water surface
+    local nextX = startX
+    local nextY = startY
+    while self.grid[nextX][nextY] == "w" and nextX < self.width do
+        print("flood:going along water surface")
+        if self.grid[nextX+1][nextY] =="w" then
+            nextX = nextX+1
+        elseif self.grid[nextX+1][nextY] == "" and self.grid[nextX+1][nextY+1] == "w" then
+            nextX = nextX+1
+            nextY = nextY+1
+        else
+            break
+        end
+    end
+    -- found a gap or the end of the surface
+    print("flood: found gap or end of water surface")
+    if nextX < self.width and self.grid[nextX+1][nextY] == "" then 
+        self.grid[nextX+1][nextY] = "w" -- put water there
+        self:applyGravity(nextX+1)      -- let it fall down
+        print("flood:successful")
+        return
+    elseif nextX == self.width or self.grid[nextX+1][nextY] == "g" or self.grid[nextX+1][nextY] == "b" or self.grid[nextX+1][nextY] == "h" or self.grid[nextX+1][nextY] == "a" then
+        print("flood: found end of layer")
+        -- go one row up
+        nextY = nextY-1
+        while true do
+            -- find last water block in this row
+            print("flood: looking for start of next row")
+            while self.grid[nextX][nextY] ~= "w" and nextX > 1 do
+                nextX = nextX-1
+            end
+            if self.grid[nextX][nextY] == "w" then
+                print("flood: found start of next row at x="..nextX.." , y="..nextY)
+                if self.grid[nextX+1][nextY] == "" then
+                    self.grid[nextX+1][nextY] = "w"
+                    self:applyGravity(nextX+1)
+                    print("flood:successful")
+                    return
+                else
+                    nextY = nextY-1
+                    print("flood: going up one row")
+                end
+            elseif nextY < startY then
+                -- reached top level of water
+                print("flood: reached top level at x="..nextX.." , y="..nextY)
+                break
+            else
+                -- go up another row
+                print("this should never happen! O.o")
+                return
+            end
+        end
+    end
+    -- surface is even/full, start new wave
+    print("flood:starting new layer")
+    if self.grid[startX][startY-1] == "" then
+        self.grid[startX][startY-1] = "w"
+    else
+        startX = 1
+        while self.grid[startX][startY-1] ~= "" and startX < self.width do
+            startX = startX+1
+            if self.grid[startX][startY-1] == "" then
+                self.grid[startX][startY-1] = "w"
+                print("flood:successful")
+                return
+            elseif self.grid[startX][startY] ~= "w" then
+                return
+            end
+        end
+    end
 end
 
 function Level:update(dt)
@@ -263,6 +351,9 @@ function Level:setDownObject()
         if self.playerLookingLeft then
             side = -1
         end
+        if self.playerX+side > self.width or self.playerX+side < 1 then
+            return
+        end
         local view_tile = self.grid[self.playerX+side][self.playerY] 
         if view_tile == "" then -- if there is room
             local down = 1
@@ -301,7 +392,7 @@ end
 function Level:applyGravity(x)
     for y = self.height-1, 1, -1 do
         local tile = self.grid[x][y]
-        if tile == "a" or tile == "b" then
+        if tile == "a" or tile == "b" or tile == "w" then
             local down = 1
             local tile_below = self.grid[x][y+down]
             while (tile_below == "") and (down+y <= self.height) do
