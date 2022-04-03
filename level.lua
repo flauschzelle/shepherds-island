@@ -13,7 +13,8 @@ function Level:initialize(name, content, intro, outro)
 
     self.playerX = 1
     self.playerY = 1
-    self.playerImage = images.child
+    self.playerImage = images.child_left
+    self.playerLookingLeft = true
 
     --self.playerSpeed = 30
 
@@ -147,7 +148,11 @@ function Level:drawPlayer()
     love.graphics.setColor(1, 0.5, 0) --orange
     local pos_x = (self.playerX-0.5)*self.tileSize+self.offsetX
     local pos_y = (self.playerY-0.5)*self.tileSize+self.offsetY
-    love.graphics.draw(self.playerImage, pos_x, pos_y, 0, 1, 1, self.playerImage:getWidth()/2, self.playerImage:getHeight()/2)
+    local scalex = 1
+    if self.playerLookingLeft == false then
+        scalex = -1
+    end
+    love.graphics.draw(self.playerImage, pos_x, pos_y, 0, scalex, 1, self.playerImage:getWidth()/2, self.playerImage:getHeight()/2)
 end
 
 function Level:drawGrid()

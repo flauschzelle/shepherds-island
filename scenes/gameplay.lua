@@ -79,12 +79,20 @@ function scene:handleInput()
     if levelManager.currentLevel().started == true then
         local lvl = levelManager.currentLevel()
         if input:isPressed("left") then
-            --go left
-            lvl:movePlayer(-1, 0)
+            if lvl.playerLookingLeft then
+                --go left
+                lvl:movePlayer(-1, 0)
+            else 
+                lvl.playerLookingLeft = true
+            end
         end
         if input: isPressed("right") then
-            --go right
-            lvl:movePlayer(1, 0)
+            if lvl.playerLookingLeft then
+                lvl.playerLookingLeft = false
+            else
+                --go right
+                lvl:movePlayer(1, 0)
+            end
         end
         if input:isPressed("up") then
             --go up
