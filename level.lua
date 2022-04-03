@@ -172,6 +172,9 @@ end
 function Level:nextState()
     -- advance tidal wave
     self:flood()
+    if self.grid[self.playerX][self.playerY] == "w" then
+        self:loseLevel("Oh no, you got hit by the water!")
+    end
     -- save state to history
     self:saveState()
 end
@@ -256,6 +259,7 @@ function Level:flood()
                         print("flood:successful")
                         return
                     else
+                        self.grid[nextX+1][nextY] = "w" --replace boat with water
                         self:loseLevel("oh no, you broke your boat!")
                         return
                     end
@@ -467,7 +471,6 @@ function Level:applyGravity(x)
             local down = 1
             local tile_below = self.grid[x][y+down]
             if tile == "w" and tile_below == "h" then
-                -- flooded the boat from above, oh no!
                 self.grid[x][y] = ""
                 self.grid[x][y+down] = tile
                 if self.grid[x+1][y+down] == "" then
@@ -476,6 +479,11 @@ function Level:applyGravity(x)
                 else
                     self.grid[x][(y-1)+down] = "h" 
                 end
+            elseif tile == "w" and tile_below == "a" then
+                self.grid[x][y] = ""
+                self.grid[x][y+down] = tile
+                self.sheepCount = self.sheepCount -1
+                self:loseLevel("Don't let your sheep get wet!")
             end
             while (tile_below == "") and (down+y <= self.height) do
                 down = down+1
@@ -489,11 +497,9 @@ function Level:applyGravity(x)
                     self.sheepCount = self.sheepCount - 1 --remove sheep
                     self:loseLevel("Don't let your sheep get wet!")
                 elseif tile == "w" and tile_below == "h" then
-                        -- flooded the boat from above, oh no!
                         self.grid[x][y] = ""
                         self.grid[x][y+down] = tile
                         self.grid[x][(y-1)+down] = "h" 
-                        --self:loseLevel("Oh no, the flood has sunken your boat!")
                 else
                     self.grid[x][y+down-1] = tile
                     self.grid[x][y] = ""
