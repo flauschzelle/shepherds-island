@@ -334,7 +334,8 @@ function Level:drawPlayer()
             sprite = "block"
         end
         if sprite ~= "" then
-            love.graphics.draw(images[sprite], pos_x, pos_y-(self.tileSize*0.7), 0, self.tileSize/16/2, self.tileSize/16/2, images[sprite]:getWidth()/2, images[sprite]:getHeight()/2)
+            sprite = sprite.."_mini"
+            love.graphics.draw(images[sprite], pos_x, pos_y-(self.tileSize*11/16), 0, self.tileSize/16, self.tileSize/16, images[sprite]:getWidth()/2, images[sprite]:getHeight()/2)
         end
     end
 end
@@ -363,9 +364,9 @@ function Level:drawGrid()
             -- draw saved sheep on boat
             if tile == "h" and self.sheepSaved > 0 then
                 for i = 1, self.sheepSaved do
-                    love.graphics.draw(images["sheep"], 2*i*(self.tileSize/16) + self.tileSize*0.3 + self.offsetX + (x - 1) * self.tileSize,
-                   2* (i%2)*self.tileSize/16 + self.offsetY + (y - 0.5) * self.tileSize, 0, self.tileSize / 16/3,
-                    self.tileSize / 16/3, images["sheep"]:getWidth()/2, images["sheep"]:getHeight()/2)
+                    love.graphics.draw(images["sheep_mini"], 2*i*(self.tileSize/16) + self.tileSize*0.3 + self.offsetX + (x - 1) * self.tileSize,
+                   2* (i%2)*self.tileSize/16 + self.offsetY + (y - 0.5) * self.tileSize, 0, self.tileSize / 16,
+                    self.tileSize / 16, images["sheep_mini"]:getWidth()/2, images["sheep_mini"]:getHeight()/2)
                 end
             end
         end
