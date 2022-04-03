@@ -339,6 +339,9 @@ function Level:liftObject()
         if self.playerLookingLeft then
             side = -1
         end
+        if self.playerX+side > self.width or self.playerX+side < 1 then
+            return
+        end
         local view_tile = self.grid[self.playerX+side][self.playerY] 
         if view_tile == "b" then
             self.carrying = "b" --pick up bag from next tile
