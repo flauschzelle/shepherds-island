@@ -365,7 +365,9 @@ function Level:movePlayer(x, y)
     local new_tile = self.grid[newX][newY]
     local tile_above = self.grid[newX][newY-1]
     if self:isBlocked(newX, newY) then
-        if not self:isBlocked(newX, newY-1) then
+        if self.grid[newX][newY] == "w" then
+            newX = self.playerX -- don't walk on water
+        elseif not self:isBlocked(newX, newY-1) then
             newY = newY-1
         else
             newX = self.playerX
