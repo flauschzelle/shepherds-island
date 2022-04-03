@@ -2,7 +2,7 @@ name = "Rescue mission"
 map = [[
 
 
-         a a bgggggggh
+         b  a bggggggh
     a p gggggggggggggw
 wwwggggggggggggggggggw
 wwgggggggggggggggggggw
