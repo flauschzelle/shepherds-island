@@ -31,7 +31,7 @@ function Input:initialize()
     self.dx = 0
     self.dy = 0
 
-    love.mouse.setRelativeMode(true)
+    --love.mouse.setRelativeMode(true)
 end
 
 

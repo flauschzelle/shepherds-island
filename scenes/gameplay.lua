@@ -1,7 +1,6 @@
 local scene = {}
 
 function scene:enter()
-    love.mouse.setRelativeMode(false)
     -- set up player cursor:
     -- self.child_rotation = 0
     -- level_grid_cols = levelManager.currentLevel().width

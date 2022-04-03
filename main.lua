@@ -67,7 +67,10 @@ function love.load()
         scenes[file.basename] = require ("scenes." .. file.basename)
     end
     roomy:hook({exclude = {"draw", "update"}}) --hook roomy in to manage the scenes (with exceptions)
-    roomy:enter(scenes.title) --start on title screen
+
+    roomy:enter(scenes.gameplay)
+    roomy:push(scenes.menu)
+    --roomy:enter(scenes.title) --start on title screen
 
     input = Input:new()
 end

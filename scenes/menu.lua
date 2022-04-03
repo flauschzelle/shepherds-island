@@ -60,7 +60,6 @@ function scene:handleInput()
 end
 
 function scene:enter()
-    --love.mouse.setRelativeMode(false)
     local lvls = levelManager.level_count
     local cols = math.ceil(lvls / 6)
 
@@ -68,10 +67,6 @@ function scene:enter()
     -- TODO: optimise speed for grid-bound cursor
     self.mouse = Cursor:new("geometry", "stop", nil, nil, 70, cols, LINES, {top = MARGIN*3, bottom = MARGIN, left = MARGIN, right = MARGIN}, "left", "top")
     self.mouse:setGeometry(arrow)
-end
-
-function scene:leave()
-    --love.mouse.setRelativeMode(true)
 end
 
 -- some geometric shapes to use as cursors: --
