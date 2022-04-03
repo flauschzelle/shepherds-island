@@ -3,13 +3,10 @@
 
 local Level = class("Level")
 
-function Level:initialize(name, content, intro, outro)
+function Level:initialize(name, map, intro, outro)
 
     self.name = name
-    self.content = content
-
-    self.width = self.content.width
-    self.height = self.content.height
+    self.map = map
 
     self.playerX = 1
     self.playerY = 1
@@ -19,6 +16,28 @@ function Level:initialize(name, content, intro, outro)
     self.carrying = ""
 
     --self.playerSpeed = 30
+
+    -- get map size
+    local mapRows = {}
+
+    -- Iterate over lines, including empty lines.
+    -- Via https://stackoverflow.com/questions/19326368/iterate-over-lines-including-blank-lines
+    function magiclines(s)
+        if s:sub(-1)~="\n" then s=s.."\n" end
+        return s:gmatch("(.-)\n")
+    end
+
+    for line in magiclines(self.map) do
+        table.insert(mapRows, line)
+        print(line)
+    end
+    self.height = #mapRows
+    self.width = 0
+    for y = 1, self.height do
+        if #mapRows[y] > self.width then
+            self.width = #mapRows[y]
+        end
+    end
 
     -- initialize grid
     self.grid = {}
@@ -35,16 +54,11 @@ function Level:initialize(name, content, intro, outro)
     self.offsetY = (CANVAS_HEIGHT - self.height*self.tileSize)/2
 
     -- load starting map
-    local mapRows = {}
-    for line in string.gmatch(self.content.map, "[^%c]+") do
-        table.insert(mapRows, line)
-    end
     print(#mapRows.." rows of content in this map")
-    emptyRows = self.height - #mapRows
     for y = 1, self.height do
-        if y > emptyRows then
-            for x = 1, self.width do
-                local letter = string.sub(mapRows[y-emptyRows], x, x)
+        for x = 1, self.width do
+            if #mapRows[y] >= x then
+                local letter = string.sub(mapRows[y], x, x)
                 if letter == "w" then     -- water
                     self.grid[x][y] = "w"
                 elseif letter == "g" then -- ground
