@@ -223,20 +223,23 @@ function Level:drawGrid()
     -- draw tiles:
     for x, col in ipairs(self.grid) do
         for y, tile in ipairs(col) do
+            local sprite = ""
             if tile == "w" then
-                love.graphics.setColor(0, 0, 1) --blue
+                sprite = "water"
             elseif tile == "g" then
-                love.graphics.setColor(0.4, 0.4, 0.4) --gray
+                sprite = "earth"
             elseif tile == "h" then
-                love.graphics.setColor(0.5, 0.3, 0.1) --brown
+                sprite = "boat"
             elseif tile == "a" then
-                love.graphics.setColor(1.0, 0.8, 0.8) --pink
+                sprite = "sheep"
             elseif tile == "b" then
-                love.graphics.setColor(0.8, 0.8, 0.4) --beige
-            else
-                love.graphics.setColor(0, 0, 0) --black
+                sprite = "block"
             end
-            love.graphics.rectangle("fill", self.offsetX+(x-1)*self.tileSize, self.offsetY + (y-1)*self.tileSize, self.tileSize, self.tileSize, 10)
+            if sprite ~= "" then
+                love.graphics.draw(images[sprite], self.offsetX + (x - 1) * self.tileSize,
+                                   self.offsetY + (y - 1) * self.tileSize, 0, self.tileSize / 16,
+                                   self.tileSize / 16)
+            end
         end
     end
 

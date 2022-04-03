@@ -39,7 +39,7 @@ function scene:update(dt)
 end
 
 function scene:draw()
-    love.graphics.clear(0, 0, 0) -- black background
+    love.graphics.clear(65/255, 166/255, 246/255) -- Sweetie 16 light blue
     love.graphics.setColor(1, 1, 1) --white
 
     levelManager.currentLevel():draw()

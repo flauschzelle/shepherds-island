@@ -23,6 +23,7 @@ function love.load()
     love.graphics.setBackgroundColor(0, 0, 0)
 
     -- load assets
+    love.graphics.setDefaultFilter("nearest", "nearest")
     images = {}
     for file in listUsefulFiles("images") do
         images[file.basename] = love.graphics.newImage(file.path)
