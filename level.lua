@@ -203,10 +203,10 @@ function Level:flood()
         print("flood:going along water surface")
         if self.grid[nextX+1][nextY] =="w" then
             nextX = nextX+1
-        elseif self.grid[nextX+1][nextY] == "" and self.grid[nextX+1][nextY+1] == "w" then
+        elseif (self.grid[nextX+1][nextY] == "" or self.grid[nextX+1][nextY] == "h") and self.grid[nextX+1][nextY+1] == "w" then
             nextX = nextX+1
             nextY = nextY+1
-        elseif self.grid[nextX+1][nextY] == "" and self.grid[nextX][nextY+1] == "w" then
+        elseif (self.grid[nextX+1][nextY] == "" or self.grid[nextX+1][nextY] == "h") and self.grid[nextX][nextY+1] == "w" then
             nextY = nextY + 1
         else
             break
@@ -218,8 +218,13 @@ function Level:flood()
         self.grid[nextX+1][nextY] = "w" -- put water there
         self:applyGravity(nextX+1)      -- let it fall down
         print("flood:successful")
+        if self.grid[nextX][nextY-1] == "h" then
+            self.grid[nextX+1][nextY-1] = "h" -- move boat
+            self.grid[nextX][nextY-1] = "" -- put air where it was
+            self:applyGravity(nextX+1)      -- let it fall down
+        end
         return
-    elseif nextX == self.width or self.grid[nextX+1][nextY] == "g" or self.grid[nextX+1][nextY] == "b" or self.grid[nextX+1][nextY] == "h" then
+    elseif nextX == self.width or self.grid[nextX+1][nextY] == "g" or self.grid[nextX+1][nextY] == "b" then
         print("flood: found end of layer")
         -- go one row up
         nextY = nextY-1
@@ -236,10 +241,28 @@ function Level:flood()
                     self:applyGravity(nextX+1)
                     print("flood:successful")
                     return
+                elseif self.grid[nextX+1][nextY] == "h" then
+                    if nextX+1 < self.width and self.grid[nextX+2][nextY] == "" then
+                        self.grid[nextX+2][nextY] = "h" -- move boat
+                        self.grid[nextX+1][nextY] = "w" -- put water there
+                        self:applyGravity(nextX+1)      -- let the water fall down
+                        self:applyGravity(nextX+2)      -- let the boat fall down
+                        print("flood:successful")
+                        return
+                    elseif self.grid[nextX+1][nextY-1] == "" then
+                        self.grid[nextX+1][nextY-1] = "h" -- move boat 
+                        self.grid[nextX+1][nextY] = "w" -- put water there
+                        print("flood:successful")
+                        return
+                    else
+                        self:loseLevel("oh no, you broke your boat!")
+                        return
+                    end
                 else
                     nextY = nextY-1
                     print("flood: going up one row")
                 end
+                
             elseif nextY < startY then
                 -- reached top level of water
                 print("flood: reached top level at x="..nextX.." , y="..nextY)
@@ -250,11 +273,29 @@ function Level:flood()
                 return
             end
         end
+    elseif self.grid[nextX+1][nextY] == "h" then
+        if nextX+1 < self.width and self.grid[nextX+2][nextY] == "" then
+            self.grid[nextX+2][nextY] = "h" -- move boat
+            self.grid[nextX+1][nextY] = "w" -- put water there
+            self:applyGravity(nextX+1)      -- let the water fall down
+            self:applyGravity(nextX+2)      -- let the boat fall down
+            print("flood:successful")
+            return
+        elseif self.grid[nextX+1][nextY-1] == "" then
+            self.grid[nextX+1][nextY-1] = "h" -- move boat 
+            self.grid[nextX+1][nextY] = "w" -- put water there
+            print("flood:successful")
+            return
+        else
+            self:loseLevel("oh no, you broke your boat!")
+            return
+        end
     elseif self.grid[nextX+1][nextY] == "a" then
         -- flooded a sheep, oh no!
         self.grid[nextX+1][nextY] = "w" -- set water
         self.sheepCount = self.sheepCount - 1 --remove sheep
-        self:loseLevel()
+        self:loseLevel("Don't let your sheep get wet!")
+        return
     end
 
     -- surface is even/full, start new wave
@@ -284,7 +325,8 @@ function Level:update(dt)
     end
 end
 
-function Level:loseLevel()
+function Level:loseLevel(message)
+    self.lostMessage = message
     self.lost = true
 end
 
@@ -413,7 +455,6 @@ function Level:setDownObject()
                     self.carrying = ""
                 end
             end
-
         end
     end
 end
@@ -421,9 +462,16 @@ end
 function Level:applyGravity(x)
     for y = self.height-1, 1, -1 do
         local tile = self.grid[x][y]
-        if tile == "a" or tile == "b" or tile == "w" then
+        if tile == "a" or tile == "b" or tile == "w" or tile == "h" then
             local down = 1
             local tile_below = self.grid[x][y+down]
+            if tile == "w" and tile_below == "h" then
+                -- flooded the boat from above, oh no!
+                self.grid[x][y] = ""
+                self.grid[x][y+down] = tile
+                self.grid[x][(y-1)+down] = "h" 
+                --self:loseLevel("Oh no, the flood has sunken your boat!")
+            end
             while (tile_below == "") and (down+y <= self.height) do
                 down = down+1
                 tile_below = self.grid[x][y+down]
@@ -434,7 +482,13 @@ function Level:applyGravity(x)
                     self.grid[x][y] = ""
                     self.grid[x][y+down] = tile
                     self.sheepCount = self.sheepCount - 1 --remove sheep
-                    self:loseLevel()
+                    self:loseLevel("Don't let your sheep get wet!")
+                elseif tile == "w" and tile_below == "h" then
+                        -- flooded the boat from above, oh no!
+                        self.grid[x][y] = ""
+                        self.grid[x][y+down] = tile
+                        self.grid[x][(y-1)+down] = "h" 
+                        --self:loseLevel("Oh no, the flood has sunken your boat!")
                 else
                     self.grid[x][y+down-1] = tile
                     self.grid[x][y] = ""
@@ -518,7 +572,7 @@ function Level:draw()
         self:drawGrid()
         self:drawPlayer()
         if self.lost then
-            local lostMessage = "Don't let your sheep get wet!\nPress "..Input:getKeyString("reset").." to restart\nor "..Input:getKeyString("back").." to undo one step."
+            local lostMessage = self.lostMessage.."\nPress "..Input:getKeyString("reset").." to restart\nor "..Input:getKeyString("back").." to undo one step."
             love.graphics.printf(lostMessage, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
         end
     end
