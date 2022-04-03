@@ -15,7 +15,7 @@
 keymapping = {
     click = {
         mouseButtons = {1},
-        keys = {"space"},
+        keys = {"space", "return"},
         joystickButtons = {1}
     },
     quit = {
