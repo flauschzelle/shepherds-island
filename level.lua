@@ -114,6 +114,51 @@ function Level:initialize(name, map, intro, outro)
         self.outro = "Congratulations, you won! Click to continue."
     end
 
+    -- initialize level state history
+    self.history = {}
+    self:saveState()
+
+end
+
+function Level:saveState()
+    -- collect relevant data
+    local state = {}
+    state.grid = deepcopy(self.grid)
+    state.playerX = self.playerX
+    state.playerY = self.playerY
+    state.playerLookingLeft = self.playerLookingLeft
+    state.sheepCount = self.sheepCount
+    state.sheepSaved = self.sheepSaved
+    state.carrying = self.carrying
+    -- save frame to history
+    table.insert(self.history, state)
+    --print(#self.history)
+end
+
+function Level:popState()
+    -- make sure there is something to pop
+    if #self.history < 2 then
+        return
+    end
+    -- copy data from history
+    local state = deepcopy(self.history[#self.history-1])
+    self.grid = state.grid
+    self.playerX = state.playerX
+    self.playerY = state.playerY
+    self.playerLookingLeft = state.playerLookingLeft
+    self.sheepCount = state.sheepCount
+    self.sheepSaved = state.sheepSaved
+    self.carrying = state.carrying
+    -- remove last history frame
+    table.remove(self.history, #self.history)
+    print(#self.history)
+end
+
+function Level:nextState()
+    -- save state to hostory
+    self:saveState()
+    -- advance water
+    -- TODO
 end
 
 function Level:update(dt)

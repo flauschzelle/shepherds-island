@@ -58,6 +58,11 @@ keymapping = {
         keys = {"s", "down", "kp2"},
         joystickButtons = {}
     },
+    back = {
+        mouseButtons = {},
+        keys = {"z", "u", "y", "backspace", "delete"},
+        joystickButtons = {}
+    },
     cheat = {
         mouseButtons = {},
         keys = {"n"},

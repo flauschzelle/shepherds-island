@@ -85,22 +85,29 @@ function scene:handleInput()
             else 
                 lvl.playerLookingLeft = true
             end
+            lvl:nextState()
         end
-        if input: isPressed("right") then
+        if input:isPressed("right") then
             if lvl.playerLookingLeft then
                 lvl.playerLookingLeft = false
             else
                 --go right
                 lvl:movePlayer(1, 0)
             end
+            lvl:nextState()
         end
         if input:isPressed("up") then
             -- pick up thing
             lvl:liftObject()
+            lvl:nextState()
         end
         if input:isPressed("down") then
             -- put down thing
             lvl:setDownObject()
+            lvl:nextState()
+        end
+        if input:isPressed("back") then
+            lvl:popState()
         end
     end
 
