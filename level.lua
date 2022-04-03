@@ -190,7 +190,7 @@ function Level:flood()
     if startX == 0 then -- no water
         return
     end
-    
+
     ::found_start::
     print("flood: found starting point")
     -- go along the water surface
@@ -203,6 +203,8 @@ function Level:flood()
         elseif self.grid[nextX+1][nextY] == "" and self.grid[nextX+1][nextY+1] == "w" then
             nextX = nextX+1
             nextY = nextY+1
+        elseif self.grid[nextX+1][nextY] == "" and self.grid[nextX][nextY+1] == "w" then
+            nextY = nextY + 1
         else
             break
         end
