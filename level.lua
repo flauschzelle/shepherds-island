@@ -277,8 +277,10 @@ function Level:flood()
 end
 
 function Level:update(dt)
-    if self.sheepSaved == self.sheepToSave then
-        self.won = true
+    if self.sheepSaved == self.sheepToSave then -- have we saved all sheep?
+        if self.grid[self.playerX][self.playerY+1] == "h" then -- are we save?
+            self.won = true
+        end
     end
 end
 
