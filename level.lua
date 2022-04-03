@@ -175,6 +175,9 @@ end
 function Level:nextState()
     -- advance tidal wave
     self:flood()
+    if self.grid[self.playerX][self.playerY] == "h" then
+        self.playerOnBoat = true
+    end
     if self.grid[self.playerX][self.playerY] == "w" then
         self:loseLevel("Oh no, you got hit by the water!")
     end
@@ -190,9 +193,9 @@ function Level:flood()
     for x, c in ipairs(self.grid) do
         for y, t in ipairs (self.grid[x]) do
             if t == "w" then
-                    startX = x
-                    startY = y
-                    goto found_start
+                startX = x
+                startY = y
+                goto found_start
             end
         end
     end
@@ -456,8 +459,8 @@ function Level:setDownObject()
             return
         end
         local view_tile = self.grid[self.playerX+side][self.playerY] 
-        if view_tile == "" then -- if there is room
-            local down = 1
+        if not self:isBlocked(self.playerX+side, self.playerY) then -- if there is room
+            local down = 0
             local view_down = self.grid[self.playerX+side][self.playerY+down]
             print(view_down)
             while view_down == "" do
@@ -483,8 +486,10 @@ function Level:setDownObject()
                     self.sheepSaved = self.sheepSaved + 1
                     self.carrying = ""
                 else
-                    self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on help
-                    self.carrying = ""
+                    -- don't put anything else on boat
+                    return
+                    --self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on help
+                    --self.carrying = ""
                 end
             elseif view_down == "w" then
                 if self.carrying == "h" then
