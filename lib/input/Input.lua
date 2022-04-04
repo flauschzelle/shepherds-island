@@ -177,10 +177,10 @@ function Input:isReleased(name)
     return self.released[name]
 end
 
-function Input:mouseMoved(dx, dy)
-    self.mouseDx = self.mouseDx + dx
-    self.mouseDy = self.mouseDy + dy
-end
+--function Input:mouseMoved(dx, dy)
+--    self.mouseDx = self.mouseDx + dx
+--    self.mouseDy = self.mouseDy + dy
+--end
 
 -- This returns a string which describes the keys bound to an envet, suitable do display to the user, as in "Press <getKeyString("pause")> to pause."
 function Input:getKeyString(name)

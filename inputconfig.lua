@@ -14,9 +14,14 @@
 
 keymapping = {
     click = {
-        mouseButtons = {1},
+        mouseButtons = {},
+        keys = {"space", "return"},
+        joystickButtons = {}
+    },
+    pickup = {
+        mouseButtons = {},
         keys = {"space"},
-        joystickButtons = {1}
+        joystickButtons = {}
     },
     quit = {
         mouseButtons = {},

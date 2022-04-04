@@ -69,9 +69,9 @@ function love.load()
     end
     roomy:hook({exclude = {"draw", "update"}}) --hook roomy in to manage the scenes (with exceptions)
 
-    roomy:enter(scenes.gameplay)
-    roomy:push(scenes.menu)
-    --roomy:enter(scenes.title) --start on title screen
+    --roomy:enter(scenes.gameplay)
+    --roomy:push(scenes.menu)
+    roomy:enter(scenes.title) --start on title screen
 
     input = Input:new()
 end
@@ -83,9 +83,9 @@ function love.update(dt)
     roomy:emit("update", dt)
 end
 
-function love.mousemoved(x, y, dx, dy, istouch)
-    input:mouseMoved(dx, dy)
-end
+--function love.mousemoved(x, y, dx, dy, istouch)
+--    input:mouseMoved(dx, dy)
+--end
 
 -- not sure if we need this, only makes sense with absolute mouse positions
 function love.mouse.getPosition()
@@ -93,10 +93,10 @@ function love.mouse.getPosition()
 end
 
 function handleInput()
-    if input:isPressed("quit") then
-        love.window.setFullscreen(false)
-        love.event.quit()
-    end
+    --if input:isPressed("quit") then
+    --    love.window.setFullscreen(false)
+    --    love.event.quit()
+    --end
     if input:isPressed("fullscreen") then
         isFullscreen = love.window.getFullscreen()
         love.window.setFullscreen(not isFullscreen)
@@ -108,8 +108,6 @@ function love.draw()
     tlfres.beginRendering(CANVAS_WIDTH, CANVAS_HEIGHT)
 
     -- (draw any global stuff here)
-    -- Show this somewhere to the user so they know where to configure
-    love.graphics.printf("Edit '" .. configFilePath .. "' to configure the input mapping.", 0, CANVAS_HEIGHT-90, CANVAS_WIDTH, "center")
 
     -- draw scene-specific stuff:
     roomy:emit("draw")

@@ -58,11 +58,7 @@ function scene:handleInput()
         end
     end
 
-    if input:isPressed("pause") then
-        roomy:push(scenes.pause)
-    end
-
-    if input:isPressed("menu") then
+    if input:isPressed("quit") then
         roomy:push(scenes.menu)
     end
 
@@ -95,7 +91,7 @@ function scene:handleInput()
         if input:isPressed("wait") then
              lvl:nextState()
         end
-        if lvl.lost == false and input:isPressed("click") then
+        if lvl.lost == false and input:isPressed("pickup") then
             if lvl.carrying == "" then
                 lvl:liftObject()
             else 

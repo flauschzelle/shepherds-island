@@ -8,7 +8,7 @@ map = [[
 wwwwggg a bbb
 ]]
 
-intro = "Welcome to Level 1. Click to start playing!"
+intro = ""
 
 level = Level:new(name, map)
 
