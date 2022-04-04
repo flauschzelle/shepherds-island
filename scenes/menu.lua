@@ -46,7 +46,7 @@ function scene:draw_level_list()
         love.graphics.printf(name, posX, posY, colWidth, "left")
         -- draw selection indicator:
         if i == self.selected then
-            arrow:draw(posX, posY)
+            arrow:draw(posX-20, posY)
         end
         i = i +1
     end
