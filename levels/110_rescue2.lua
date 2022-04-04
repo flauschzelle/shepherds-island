@@ -3,12 +3,10 @@ map = [[
 
 
 
-                  gggh
-              b b gggw
-        b   bgggg gggw
-   a p ggggggggggggggw
-wwgggggggggggggggggggw
-wggggggggggggggggggggw
+                       gh
+  apggggggggg          gw
+wwggggggggggggggggggggggw
+wgggggggggggggggggggggggw
 ]]
 
 intro = ""
