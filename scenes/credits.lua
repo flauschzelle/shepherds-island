@@ -5,4 +5,10 @@ function scene:draw()
     love.graphics.printf("Thanks for playing!", 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
 end
 
+function scene:handleInput()
+    if input:isPressed("quit") then
+        love.event.quit()
+    end
+end
+
 return scene
