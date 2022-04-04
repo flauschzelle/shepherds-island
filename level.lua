@@ -97,6 +97,21 @@ function Level:initialize(name, map, intro, outro)
     self.sheepToSave = self.sheepCount
     self.sheepSaved = 0
 
+    -- initialize boat indexing
+    self.boatCount = 0
+    self.boatIndex = {}
+    for x, c in ipairs(self.grid) do
+        for y, t in ipairs (self.grid[x]) do
+            if t == "h" then
+                self.boatCount = self.boatCount + 1
+                self.boatIndex[self.boatCount] = {}
+                self.boatIndex[self.boatCount]["x"] = x
+                self.boatIndex[self.boatCount]["y"] = y
+                self.boatIndex[self.boatCount]["sheep"] = 0
+            end
+        end
+    end
+
     -- initialize level state
 
     self.started = false
@@ -135,6 +150,8 @@ function Level:saveState()
     state.carrying = self.carrying
     state.lost = self.lost
     state.playerOnBoat = self.playerOnBoat
+    state.boatCount = self.boatCount
+    state.boatIndex = deepcopy(self.boatIndex)
     -- save frame to history
     table.insert(self.history, state)
     --print(#self.history)
@@ -161,6 +178,8 @@ function Level:popState(restart)
     self.carrying = state.carrying
     self.lost = state.lost
     self.playerOnBoat = state.playerOnBoat
+    self.boatCount = state.boatCount
+    self.boatIndex = state.boatIndex
 
     if restart then
         -- clear history
@@ -226,26 +245,37 @@ function Level:floodFrom(x, y)
         sounds.sheep_unhappy:play()
         self:loseLevel("Don't let your sheep get wet!")
     elseif right == "h" then
-        self.grid[x+1][y] = "w"
-        if x <= self.width-2 and self.grid[x+2][y] == "" then
-            self.grid[x+2][y] = "h" --move boat right
-            if self.playerOnBoat and self.playerX == x+1 and self.playerY == y then
-                self.playerX = x+2 -- move player right with boat
-            end
+        local boat = self:getBoatIndex(x+1, y)
+        if boat == 0 then
+            print("boat index not found, this should not happen!")
+            return
+        end
+        if self:moveBoat(boat, x+2, y) then
+            self.grid[x+1][y] = "w"
             self:applyGravity(x+2)
-        elseif self.grid[x+1][y-1] == "" then
-            self.grid[x+1][y-1] = "h" --move boat up
-            if self.playerOnBoat and self.playerX == x+1 and self.playerY == y then
-                self.playerY = y-1 -- move player up with boat
+        elseif self:moveBoat(boat, x+1, y-1) then
+            self.grid[x+1][y] = "w"
+            self:applyGravity(x+1)
+        elseif x <= self.width-3 and self.grid[x+2][y] == "h" then --and self.grid[x+3][y] == "" then
+            local other_boat = self:getBoatIndex(x+2, y)
+            if other_boat == 0 then
+                print("boat index not found, this should not happen!")
+                return
             end
-        elseif x <= self.width-3 and self.grid[x+2][y] == "h" and self.grid[x+3][y] == "" then
-            self.grid[x+3][y] = "h" -- move both boats right
-            if self.playerOnBoat and self.playerX == x+2 and self.playerY == y then
-                self.playerX = x+3 -- move player right with second boat
+            if self:moveBoat(other_boat, x+3, y) then
+                self.moveBoat(boat, x+2, y)
+                self.grid[x+1][y] = "w"
+                self:applyGravity(x+3)
+                self:applyGravity(x+2)
+                self:applyGravity(x+1)
+            else
+                self.grid[x+1][y] = "w"
+                self:loseLevel("oh no, your boat got crushed by the water!")
             end
         else
             sounds.ship_breaks:setPitch(0.8+0.4*math.random())
             sounds.ship_breaks:play()
+            self.grid[x+1][y] = "w"
             self:loseLevel("oh no, your boat got crushed by the water!")
         end
         self:applyGravity(x+1)
@@ -363,6 +393,38 @@ function Level:isBlocked(x, y)
         return true
     else
         return false
+    end
+end
+
+function Level:getBoatIndex(x, y)
+    local index = 0
+    for i, b in pairs(self.boatIndex) do
+        if b["x"] == x and b["y"] == y then
+            index = i
+        end
+    end
+    return index
+end
+
+function Level:playerIsOnBoat(index)
+    return self.playerOnBoat and self.boatIndex[index]["x"] == self.playerX and self.boatIndex[index]["y"] == self.playerY
+end
+
+function Level:moveBoat(index, newX, newY)
+    local oldX = self.boatIndex[index]["x"]
+    local oldY = self.boatIndex[index]["y"]
+    if newX > self.width or newX < 1 or newY > self.height or newY < 1 or self.grid[newX][newY] ~= "" then
+        return false
+    else
+        self.grid[oldX][oldY] = ""
+        if self:playerIsOnBoat(index) then
+            self.playerX = newX
+            self.playerY = newY
+        end
+        self.grid[newX][newY] = "h"
+        self.boatIndex[index]["x"] = newX
+        self.boatIndex[index]["y"] = newY    
+        return true
     end
 end
 
@@ -541,19 +603,17 @@ function Level:applyGravity(x)
             if tile == "w" and tile_below == "h" then
                 self.grid[x][y] = ""
                 self.grid[x][y+down] = tile
-                if x+1 <= self.width and self.grid[x+1][y+down] == "" then
-                    self.grid[x+1][y+down] = "h" --move boat to the right
-                    if self.playerOnBoat and self.playerX == x and self.playerY == y+down then -- move player with boat
-                        self.playerX = x+1
-                        self.playerY = y+down
-                    end
+                local boat = self:getBoatIndex(x, y+down)
+                if boat == 0 then
+                    print("boat index not found, this should not happen!")
+                    return
+                end
+                if self:moveBoat(boat, x+1, y+down) then
+                    self.grid[x][y+down] = "w"
                     self:applyGravity(x+1) -- let boat fall down
-                else
-                    self.grid[x][(y-1)+down] = "h"
-                    if self.playerOnBoat and self.playerX == x and self.playerY == y+down then --move player with boat
-                        self.playerX = x
-                        self.playerY = (y-1)+down
-                    end 
+                elseif self.moveBoat(boat, x, (y-1)+down) then
+                    self.grid[x][y+down] = "w"
+                    self:applyGravity(x+1) -- let boat fall down
                 end
             elseif tile == "w" and tile_below == "a" then
                 self.grid[x][y] = ""
@@ -578,18 +638,23 @@ function Level:applyGravity(x)
                     sounds.sheep_unhappy:play()
                     self:loseLevel("Don't let your sheep get wet!")
                 elseif tile == "w" and tile_below == "h" then
-                        self.grid[x][y] = ""
-                        self.grid[x][y+down] = tile
-                        self.grid[x][(y-1)+down] = "h" 
-                        if self.playerOnBoat and self.playerX == x and self.playerY == y+down then --move player with boat
-                            self.playerX = x
-                            self.playerY = (y-1)+down
-                        end 
-                elseif tile == "h" and self.playerOnBoat and self.playerX == x and self.playerY == y then
-                        self.grid[x][y+down-1] = tile
-                        self.grid[x][y] = ""
-                        self.playerX = x       -- move player with boat
-                        self.playerY = y+down-1
+                    local boat = self:getBoatIndex(x, y+down)
+                    if boat == 0 then
+                        print("boat index not found, this should not happen!")
+                        return
+                    end
+                    self.grid[x][y+down] = ""
+                    self:moveBoat(boat, x, (y-1)+down)
+                    self.grid[x][y] = ""
+                    self.grid[x][y+down] = "w"
+                elseif tile == "h" then
+                    local boat = self:getBoatIndex(x, y+down)
+                    if boat == 0 then
+                        print("boat index not found, this should not happen!")
+                        return
+                    end
+                    self.grid[x][y] = ""
+                    self.moveBoat(boat, x, y+down-1)
                 else
                     self.grid[x][y+down-1] = tile
                     self.grid[x][y] = ""
