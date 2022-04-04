@@ -237,7 +237,7 @@ function Level:flood()
         print("flood:successful")
         if self.grid[nextX][nextY-1] == "h" then
             self.grid[nextX+1][nextY-1] = "h" -- move boat
-            if self.playerOnBoat then --move player with boat
+            if self.playerOnBoat and self.playerX == nextX and self.playerY == nextY-1 then --move player with boat
                 self.playerX = nextX+1
                 self.playerY = nextY-1
             end 
@@ -265,7 +265,7 @@ function Level:flood()
                 elseif self.grid[nextX+1][nextY] == "h" then
                     if nextX+1 < self.width and self.grid[nextX+2][nextY] == "" then
                         self.grid[nextX+2][nextY] = "h" -- move boat
-                        if self.playerOnBoat then --move player with boat
+                        if self.playerOnBoat and self.playerX == nextX+1 and self.playerY == nextY then --move player with boat
                             self.playerX = nextX+2
                             self.playerY = nextY
                         end 
@@ -276,7 +276,7 @@ function Level:flood()
                         return
                     elseif self.grid[nextX+1][nextY-1] == "" then
                         self.grid[nextX+1][nextY-1] = "h" -- move boat 
-                        if self.playerOnBoat then --move player with boat
+                        if self.playerOnBoat and self.playerX == nextX+1 and self.playerY == nextY then --move player with boat
                             self.playerX = nextX+1
                             self.playerY = nextY-1
                         end 
@@ -306,7 +306,7 @@ function Level:flood()
     elseif self.grid[nextX+1][nextY] == "h" then
         if nextX+1 < self.width and self.grid[nextX+2][nextY] == "" then
             self.grid[nextX+2][nextY] = "h" -- move boat
-            if self.playerOnBoat then --move player with boat
+            if self.playerOnBoat and self.playerX == nextX+1 and self.playerY == nextY then --move player with boat
                 self.playerX = nextX+2
                 self.playerY = nextY
             end 
@@ -317,7 +317,7 @@ function Level:flood()
             return
         elseif self.grid[nextX+1][nextY-1] == "" then
             self.grid[nextX+1][nextY-1] = "h" -- move boat 
-            if self.playerOnBoat then --move player with boat
+            if self.playerOnBoat and self.playerX == nextX+1 and self.playerY == nextY then --move player with boat
                 self.playerX = nextX+1
                 self.playerY = nextY-1
             end 
@@ -519,14 +519,14 @@ function Level:applyGravity(x)
                 self.grid[x][y+down] = tile
                 if x+1 <= self.width and self.grid[x+1][y+down] == "" then
                     self.grid[x+1][y+down] = "h" --move boat to the right
-                    if self.playerOnBoat then -- move player with boat
+                    if self.playerOnBoat and self.playerX == x and self.playerY == y+down then -- move player with boat
                         self.playerX = x+1
                         self.playerY = y+down
                     end
                     self:applyGravity(x+1) -- let boat fall down
                 else
                     self.grid[x][(y-1)+down] = "h"
-                    if self.playerOnBoat then --move player with boat
+                    if self.playerOnBoat and self.playerX == x and self.playerY == y+down then --move player with boat
                         self.playerX = x
                         self.playerY = (y-1)+down
                     end 
@@ -552,11 +552,11 @@ function Level:applyGravity(x)
                         self.grid[x][y] = ""
                         self.grid[x][y+down] = tile
                         self.grid[x][(y-1)+down] = "h" 
-                        if self.playerOnBoat then --move player with boat
+                        if self.playerOnBoat and self.playerX == x and self.playerY == y+down then --move player with boat
                             self.playerX = x
                             self.playerY = (y-1)+down
                         end 
-                elseif tile == "h" and self.playerOnBoat then
+                elseif tile == "h" and self.playerOnBoat and self.playerX == x and self.playerY == y+down then
                         self.grid[x][y+down-1] = tile
                         self.grid[x][y] = ""
                         self.playerX = x       -- move player with boat
