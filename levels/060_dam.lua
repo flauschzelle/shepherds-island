@@ -1,4 +1,4 @@
-name = "Dam"
+name = "Damn Dam"
 map = [[
 
               b
@@ -7,9 +7,9 @@ map = [[
               b
               b
               b
-wwwwwwwwwwwwwwb           g
-wwwwwwwwwwwwwwb           gh
-wwwwwwwwwwwwwwb  p a      gwwwww
+wwwwwwwwwwwwwbb           g
+wwwwwwwwwwwwbbb           gh
+wwwwwwwwwwbbbbb  p a      gwwwww
 gggggggggggggggggggggggggggggggg
 ]]
 

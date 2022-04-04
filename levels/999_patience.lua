@@ -1,4 +1,4 @@
-name = "Basin of patience"
+name = "Unfinished: Basin of Patience"
 map = [[
 
 

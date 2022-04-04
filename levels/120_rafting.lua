@@ -8,8 +8,8 @@ ggggg
      gw                                             
      gw                     b                       
      gg          ga        ggggggggg  ggg         a 
-      gggggggggggggggwwwwwwg       g    gw       ggg
-                    gggggggg       ggggggw      gggg
+      gggggggggggggggwwwwwwg       g    g        ggg
+                    gggggggg       gggggg       gggg
                                    ggggggwwwww ggggg
                                         gggggggggggg
 

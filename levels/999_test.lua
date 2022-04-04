@@ -1,4 +1,4 @@
-name = "First Level"
+name = "Test Level"
 map = [[
 
 

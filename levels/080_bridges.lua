@@ -1,11 +1,12 @@
-name = "Bridges"
+name = "Seafarers"
 map = [[
 
 
 
                p   h            
               gggwgggwwgggwwwwgga 
-           h gggggggggggggwwwwgggg
+             gggggggggggggwwwwgggg
+      h     gggggggggggggggggggggg
 wwwwwwwwwwwwgggggggggggggggggggggg
 ]]
 
