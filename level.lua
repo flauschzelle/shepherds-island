@@ -175,8 +175,15 @@ end
 function Level:nextState()
     -- advance tidal wave
     self:flood()
+    -- check if player is on boat
     if self.grid[self.playerX][self.playerY] == "h" then
         self.playerOnBoat = true
+        -- automatically set down sheep on boat
+        if self.carrying == "a" then
+            self.carrying = ""
+            self.sheepSaved = self.sheepSaved + 1
+            self.sheepCount = self.sheepCount - 1
+        end
     end
     if self.grid[self.playerX][self.playerY] == "w" then
         self:loseLevel("Oh no, you got hit by the water!")
