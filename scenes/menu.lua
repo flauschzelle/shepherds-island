@@ -42,8 +42,16 @@ function scene:draw_level_list()
         local name = number..levels[i].name
         local posX = MARGIN + ((math.ceil(i/LINES)-1)*colWidth)
         local posY = 3*MARGIN + (((i-1)%LINES) * lineHeight)
+
+        if levels[i].won then
+            love.graphics.setColor(56/255, 183/255, 100/255)
+        else
+            love.graphics.setColor(1,1,1)
+        end
+
         love.graphics.printf(name, posX, posY, colWidth, "left")
         -- draw selection indicator:
+        love.graphics.setColor(1,1,1)
         if i == self.selected then
             love.graphics.draw(images.boat_mini, posX-30, posY+10, 0, 4, 4, 1, 0.5)
         end
@@ -85,8 +93,8 @@ function scene:handleInput()
         if newlevelno <= levelManager.level_count then
             -- reset current level state
             if levelManager.current ~= newlevelno then
-                levelManager:currentLevel():popState(true) --reset level state
-                levelManager:currentLevel().won = false
+                --levelManager:currentLevel():popState(true) --reset level state
+                --levelManager:currentLevel().won = false
                 if levelManager:currentLevel().intro ~= nil then
                     levelManager:currentLevel().started = false
                 end
