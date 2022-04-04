@@ -15,7 +15,7 @@
 keymapping = {
     click = {
         mouseButtons = {1},
-        keys = {"space", "return"},
+        keys = {"space"},
         joystickButtons = {1}
     },
     quit = {
@@ -66,6 +66,11 @@ keymapping = {
     reset = {
         mouseButtons = {},
         keys = {"r"},
+        joystickButtons = {}
+    },
+    wait = {
+        mouseButtons = {},
+        keys = {"return"},
         joystickButtons = {}
     },
     cheat = {

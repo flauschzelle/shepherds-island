@@ -96,16 +96,9 @@ function scene:handleInput()
             end
             lvl:nextState()
         end
-        -- if input:isPressed("up") then
-        --     -- pick up thing
-        --     lvl:liftObject()
-        --     lvl:nextState()
-        -- end
-        -- if input:isPressed("down") then
-        --     -- put down thing
-        --     lvl:setDownObject()
-        --     lvl:nextState()
-        -- end
+        if input:isPressed("wait") then
+             lvl:nextState()
+        end
         if lvl.lost == false and input:isPressed("click") then
             if lvl.carrying == "" then
                 lvl:liftObject()
