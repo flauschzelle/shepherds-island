@@ -772,7 +772,15 @@ function Level:drawGrid()
                     sprite = "water"
                 end
             elseif tile == "g" then
-                sprite = "earth"
+                local above = ""
+                if y > 1 then
+                     above = self.grid[x][y-1]
+                end
+                if above == "" or above == "a" or above == "h" or above == "b" then
+                    sprite = "earth_surface"
+                else
+                    sprite = "earth"
+                end
             elseif tile == "h" then
                 sprite = "boat"
             elseif tile == "a" then
