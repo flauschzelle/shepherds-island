@@ -325,7 +325,8 @@ function Level:flood()
             print("flood:successful")
             return
         else
-            self:loseLevel("oh no, you broke your boat!")
+            self.grid[nextX+1][nextY] = "w"
+            self:loseLevel("oh no, your boat got crushed by the water!")
             return
         end
     elseif self.grid[nextX+1][nextY] == "a" then
