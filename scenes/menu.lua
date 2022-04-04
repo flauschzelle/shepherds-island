@@ -45,13 +45,15 @@ function scene:handleInput()
         if newlevelno <= levelManager.level_count then
             -- reset current level state
             if levelManager.current ~= newlevelno then
+                levelManager:currentLevel():popState(true) --reset level state
                 levelManager:currentLevel().won = false
                 if levelManager:currentLevel().intro ~= nil then
                     levelManager:currentLevel().started = false
                 end
+                -- switch to new level
+                levelManager.current = newlevelno
+                levelManager:currentLevel():popState(true) --reset level state
             end
-            -- switch to new level
-            levelManager.current = newlevelno
             -- leave menu
             roomy:pop()
         end
