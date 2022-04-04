@@ -7,7 +7,7 @@ map = [[
 wwwwwggggggggggwwww
 ]]
 
-intro = "The water is rising!\n\nTake your sheep and get to the boat!\nIt will bring all of you to the next island.\n\nPress space to pick up or drop objects."
+intro = "The water is rising!\n\nTake your sheep and get to the boat!\nIt will bring all of you to the next island.\n\nPress space to pick up or drop objects next to you."
 
 level = Level:new(name, map, intro)
 
