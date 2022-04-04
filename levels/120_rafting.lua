@@ -3,14 +3,14 @@ map = [[
 
    ph
    gg
-  gggw                                              
+  ggg                                               
 wggggg                                              
-ggggggw                                             
-ggggggw                     b                       
+gggggg                                              
+gggggg                      b                       
 ggggggg          ga        ggggggggg  ggg         a 
-gggggggggggggggggggggwwwwwwggggggggg    g        ggg
+gggggggwwwwwwwwwwggggwwwwwwggggggggg    g        ggg
 ggggggggggggggggggggggggggggggggggggggggg       gggg
-gggggggggggggggggggggggggggggggggggggggggwwwww ggggg
+gggggggggggggggggggggggggggggggggggggggggwwwwwwggggg
 gggggggggggggggggggggggggggggggggggggggggggggggggggg
 ]]
 
