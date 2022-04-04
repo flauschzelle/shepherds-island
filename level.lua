@@ -186,6 +186,8 @@ function Level:nextState()
         end
     end
     if self.grid[self.playerX][self.playerY] == "w" then
+        sounds.splash:setPitch(0.8+0.4*math.random())
+        sounds.splash:play()
         self:loseLevel("Oh no, you got hit by the water!")
     end
     -- save state to history
@@ -211,12 +213,17 @@ function Level:floodFrom(x, y)
         self.grid[x+1][y] = "w"
         self:applyGravity(x+1)
         if self.playerX == x+1 and self.playerY == y then
+            sounds.splash:setPitch(0.8+0.4*math.random())
+            sounds.splash:play()
             self:loseLevel("Oh no, you got hit by the water!")
         end
     elseif right == "a" then
         self.grid[x+1][y] = "w"
         self:applyGravity(x+1)
         self.sheepCount = self.sheepCount - 1 --remove sheep
+
+        sounds.sheep_unhappy:setPitch(0.8+0.4*math.random())
+        sounds.sheep_unhappy:play()
         self:loseLevel("Don't let your sheep get wet!")
     elseif right == "h" then
         self.grid[x+1][y] = "w"
@@ -237,6 +244,8 @@ function Level:floodFrom(x, y)
                 self.playerX = x+3 -- move player right with second boat
             end
         else
+            sounds.ship_breaks:setPitch(0.8+0.4*math.random())
+            sounds.ship_breaks:play()
             self:loseLevel("oh no, your boat got crushed by the water!")
         end
         self:applyGravity(x+1)
@@ -536,6 +545,8 @@ function Level:applyGravity(x)
                 self.grid[x][y] = ""
                 self.grid[x][y+down] = tile
                 self.sheepCount = self.sheepCount -1
+                sounds.sheep_unhappy:setPitch(0.8+0.4*math.random())
+                sounds.sheep_unhappy:play()
                 self:loseLevel("Don't let your sheep get wet!")
             end
             while (tile_below == "") and (down+y <= self.height) do
@@ -548,6 +559,9 @@ function Level:applyGravity(x)
                     self.grid[x][y] = ""
                     self.grid[x][y+down] = tile
                     self.sheepCount = self.sheepCount - 1 --remove sheep
+
+                    sounds.sheep_unhappy:setPitch(0.8+0.4*math.random())
+                    sounds.sheep_unhappy:play()
                     self:loseLevel("Don't let your sheep get wet!")
                 elseif tile == "w" and tile_below == "h" then
                         self.grid[x][y] = ""
