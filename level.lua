@@ -679,6 +679,7 @@ function Level:draw()
             love.graphics.printf(lostMessage, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
         end
         local gap = CANVAS_HEIGHT/16
+        love.graphics.setFont(bigfont)
         love.graphics.printf(self.name, gap, gap, CANVAS_WIDTH-2*gap, "right")
     end
 end

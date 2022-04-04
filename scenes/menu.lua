@@ -21,11 +21,14 @@ end
 
 function scene:draw()
     love.graphics.setColor(1, 1, 1) --white
+    love.graphics.setFont(bigfont)
     love.graphics.printf("Shepherd's Island", 0, 20, CANVAS_WIDTH, "center")
     --love.graphics.printf("Press Q to return to the game or choose a level and click.", 0, 70, CANVAS_WIDTH, "center")
+    love.graphics.setFont(smallfont)
     draw_level_list()
 
     -- Show this somewhere to the user so they know where to configure
+    love.graphics.setFont(tinyfont)
     love.graphics.printf("Edit '" .. configFilePath .. "' to configure the input mapping.", 0, CANVAS_HEIGHT-90, CANVAS_WIDTH, "center")
 
     self.mouse:draw()
@@ -37,8 +40,8 @@ function scene:update(dt)
 end
 
 function scene:handleInput()
-    if input:isPressed("menu") then
-        roomy:pop()
+    if input:isPressed("quit") then
+        roomy:enter(scenes.title)
     end
 
     if input:isPressed("click") then

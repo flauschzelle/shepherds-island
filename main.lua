@@ -14,6 +14,9 @@ CANVAS_HEIGHT = 1080
 roomy = libroomy.new() -- roomy is the manager for all the rooms (scenes) in our game
 scenes = {} -- initialize list of scenes
 
+bigfont = nil
+smallfont = nil
+
 function love.load()
     -- initialize randomness in two ways:
     love.math.setRandomSeed(os.time())
@@ -44,12 +47,18 @@ function love.load()
     fonts = {}
     for file in listUsefulFiles("fonts") do
         fonts[file.basename] = {}
-        for fontsize=50,100 do
+        local sizes = {32, 50, 64, 128}
+        for i,fontsize in ipairs(sizes) do
             fonts[file.basename][fontsize] = love.graphics.newFont(file.path, fontsize)
         end
     end
 
-    love.graphics.setNewFont(40) -- initialize default font size
+    hugefont = fonts["digitaldisco"][128]
+    bigfont = fonts["digitaldisco"][64]
+    smallfont = fonts["digitaldisco_thin"][50]
+    tinyfont = fonts["digitaldisco_thin"][32]
+
+    love.graphics.setFont(bigfont)
 
     -- levels
     basenames = {}
