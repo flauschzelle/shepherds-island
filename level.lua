@@ -61,7 +61,11 @@ function Level:initialize(name, map, intro, outro)
         for x = 1, self.width do
             if #mapRows[y] >= x then
                 local letter = string.sub(mapRows[y], x, x)
-                if letter == "w" then     -- water
+                if letter == "l" then -- only for title screen!
+                    self.grid[x][y] = "l"
+                elseif letter == "d" then -- only for title screen!
+                    self.grid[x][y] = "d"
+                elseif letter == "w" then     -- water
                     self.grid[x][y] = "w"
                 elseif letter == "g" then -- ground
                     self.grid[x][y] = "g"
@@ -80,9 +84,9 @@ function Level:initialize(name, map, intro, outro)
     end
 
     -- make sure nothing is floating in the air:
-    for x = 1, self.width do
-        self:applyGravity(x)
-    end
+    -- for x = 1, self.width do
+    --     self:applyGravity(x)
+    -- end
 
     -- count sheep
     self.sheepCount = 0
@@ -726,8 +730,44 @@ function Level:drawGrid()
             love.graphics.setColor(1, 1, 1)
 
             local sprite = ""
-            if tile == "w" then
-                sprite = "water"
+            if tile == "l" then
+                sprite = "water_wave_left"
+            elseif tile == "d" then
+                sprite = "water_overhang_down"
+            elseif tile == "w" then
+                local left = "w"
+                local right = "w"
+                local above = ""
+                local below = "w"
+                if x > 1 then
+                    left = self.grid[x-1][y]
+                end
+                if x < self.width then
+                    right = self.grid[x+1][y]
+                end
+                if y > 1 then
+                    above = self.grid[x][y-1]
+                end
+                if y < self.height then
+                    below = self.grid [x][y+1]
+                end
+                if (above == "" or above == "h") and (below == "" or below =="h") and (right == "" or right == "h") then
+                    sprite = "water_wave_over"
+                elseif (above == "" or above == "h") and (right == "" or right == "h") then
+                    sprite = "water_wave"
+                elseif (above == "" or above == "h") and (left == "" or left == "h") then
+                    sprite = "water_wave_left"
+                elseif (above == "" or above == "h") and right ~= "" and right ~= "h" then
+                    sprite = "water_surface"
+                elseif above ~= "" and above ~= "h" and (below == "" or below =="h") and (right == "" or right == "h" or right == "d") then
+                    sprite = "water_overhang_right"
+                elseif above ~= "" and above ~= "h" and (right == "" or right == "h") then
+                    sprite = "water_side_right"
+                elseif above ~= "" and above ~= "h" and (left == "" or left == "h") then
+                    sprite = "water_side_left"
+                else
+                    sprite = "water"
+                end
             elseif tile == "g" then
                 sprite = "earth"
             elseif tile == "h" then

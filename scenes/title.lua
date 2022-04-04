@@ -6,10 +6,10 @@ map = [[
 
 
 
- w
-ww
-ww       p a
-www   a ggggg a
+
+ www
+lwwd     p a
+ww    a ggggg a
 www   ggggggggg h
 wwwwwggggggggggwwww
 ]]
