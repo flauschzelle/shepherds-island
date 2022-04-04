@@ -192,6 +192,98 @@ function Level:nextState()
     self:saveState()
 end
 
+function Level:floodFrom(x, y)
+    print("trying to flood from x="..x..", y="..y)
+    -- make sure we actually start from water:
+    if x > 0 and y > 0 and self.grid[x][y] ~= "w" then
+        print("No water here, this should not happen!")
+        return
+    end
+    if x == self.width then
+        -- go up one layer:
+        local newX, newY = self:findWavefrontBefore(x, y-1)
+        self:floodFrom(newX, newY)
+        return
+    end
+
+    local right = self.grid[x+1][y]
+    if right == "" then
+        self.grid[x+1][y] = "w"
+        self:applyGravity(x+1)
+        if self.playerX == x+1 and self.playerY == y then
+            self:loseLevel("Oh no, you got hit by the water!")
+        end
+    elseif right == "a" then
+        self.grid[x+1][y] = "w"
+        self:applyGravity(x+1)
+        self.sheepCount = self.sheepCount - 1 --remove sheep
+        self:loseLevel("Don't let your sheep get wet!")
+    elseif right == "h" then
+        self.grid[x+1][y] = "w"
+        if x <= self.width-2 and self.grid[x+2][y] == "" then
+            self.grid[x+2][y] = "h" --move boat right
+            if self.playerOnBoat and self.playerX == x+1 and self.playerY == y then
+                self.playerX = x+2 -- move player right with boat
+            end
+            self:applyGravity(x+2)
+        elseif self.grid[x+1][y-1] == "" then
+            self.grid[x+1][y-1] = "h" --move boat up
+            if self.playerOnBoat and self.playerX == x+1 and self.playerY == y then
+                self.playerY = y-1 -- move player up with boat
+            end
+        elseif x <= self.width-3 and self.grid[x+2][y] == "h" and self.grid[x+3][y] == "" then
+            self.grid[x+3][y] = "h" -- move both boats right
+            if self.playerOnBoat and self.playerX == x+2 and self.playerY == y then
+                self.playerX = x+3 -- move player right with second boat
+            end
+        else
+            self:loseLevel("oh no, your boat got crushed by the water!")
+        end
+        self:applyGravity(x+1)
+    elseif (right == "g" or right == "b") and y > 1 then
+        -- go up one layer:
+        local newX, newY = self:findWavefrontBefore(x, y-1)
+        self:floodFrom(newX, newY)
+        return
+    end
+    print("flooded from x="..x..", y="..y)
+end
+
+function Level:findWavefrontBefore(x,y)
+    print("looking for wavefront from x="..x..", y="..y)
+    local newX = x
+    local newY = y
+    if newX > 0 and newY > 0 and self.grid[x][y] == "w" then
+        return newX, newY
+    elseif newX > 0 then
+        local lookat = self.grid[newX][newY]
+        while newX > 1 and lookat ~= "w" do
+            newX = newX-1
+            lookat = self.grid[newX][newY]
+        end
+        if self.grid[newX][newY] == "w" then
+            return newX, newY
+        elseif newX > 1 and y > 1 then
+            return self:findWavefrontBefore(x, y-1)
+        elseif newX == 1 and newY > 1 then
+            local up = self.grid[newX][newY-1]
+            newY = newY-1
+            if up == "" or up == "h" then
+                print("No current wavefront found, starting new flood layer at y="..newY)
+                return 0, newY
+            end
+        elseif newX == 1 and newY == 1 then
+             return 0, 1
+        else
+            print("No water here, this should not happen!")
+            return
+        end
+    elseif newX == 0 and newY > 0 then
+        print("No current wavefront found, starting new flood layer at y="..newY)
+        return newX, newY
+    end
+end
+
 function Level:flood()
     --find starting point for flood:
     print("flood:looking for starting point..")
@@ -231,129 +323,8 @@ function Level:flood()
     end
     -- found a gap or the end of the surface
     print("flood: found end of water surface at x="..nextX.." , y="..nextY)
-    if nextX < self.width and self.grid[nextX+1][nextY] == "" then 
-        self.grid[nextX+1][nextY] = "w" -- put water there
-        self:applyGravity(nextX+1)      -- let it fall down
-        print("flood:successful")
-        if self.grid[nextX][nextY-1] == "h" then
-            self.grid[nextX+1][nextY-1] = "h" -- move boat
-            if self.playerOnBoat and self.playerX == nextX and self.playerY == nextY-1 then --move player with boat
-                self.playerX = nextX+1
-                self.playerY = nextY-1
-            end 
-            self.grid[nextX][nextY-1] = "" -- put air where it was
-            self:applyGravity(nextX+1)      -- let it fall down
-        end
-        return
-    elseif nextX == self.width or self.grid[nextX+1][nextY] == "g" or self.grid[nextX+1][nextY] == "b" then
-        print("flood: found end of layer")
-        -- go one row up
-        nextY = nextY-1
-        while true do
-            -- find last water block in this row
-            print("flood: looking for start of next row")
-            while self.grid[nextX][nextY] ~= "w" and nextX > 1 do
-                nextX = nextX-1
-            end
-            if self.grid[nextX][nextY] == "w" then
-                print("flood: found start of next row at x="..nextX.." , y="..nextY)
-                if self.grid[nextX+1][nextY] == "" then
-                    self.grid[nextX+1][nextY] = "w"
-                    self:applyGravity(nextX+1)
-                    print("flood:successful")
-                    return
-                elseif self.grid[nextX+1][nextY] == "h" then
-                    if nextX+1 < self.width and self.grid[nextX+2][nextY] == "" then
-                        self.grid[nextX+2][nextY] = "h" -- move boat
-                        if self.playerOnBoat and self.playerX == nextX+1 and self.playerY == nextY then --move player with boat
-                            self.playerX = nextX+2
-                            self.playerY = nextY
-                        end 
-                        self.grid[nextX+1][nextY] = "w" -- put water there
-                        self:applyGravity(nextX+1)      -- let the water fall down
-                        self:applyGravity(nextX+2)      -- let the boat fall down
-                        print("flood:successful")
-                        return
-                    elseif self.grid[nextX+1][nextY-1] == "" then
-                        self.grid[nextX+1][nextY-1] = "h" -- move boat 
-                        if self.playerOnBoat and self.playerX == nextX+1 and self.playerY == nextY then --move player with boat
-                            self.playerX = nextX+1
-                            self.playerY = nextY-1
-                        end 
-                        self.grid[nextX+1][nextY] = "w" -- put water there
-                        print("flood:successful")
-                        return
-                    else
-                        self.grid[nextX+1][nextY] = "w" --replace boat with water
-                        self:loseLevel("oh no, your boat got crushed by the water!")
-                        return
-                    end
-                else
-                    nextY = nextY-1
-                    print("flood: going up one row")
-                end
-
-            elseif nextY < startY then
-                -- reached top level of water
-                print("flood: reached top level at x="..nextX.." , y="..nextY)
-                break
-            else
-                -- go up another row
-                print("this should never happen! O.o")
-                return
-            end
-        end
-    elseif self.grid[nextX+1][nextY] == "h" then
-        if nextX+1 < self.width and self.grid[nextX+2][nextY] == "" then
-            self.grid[nextX+2][nextY] = "h" -- move boat
-            if self.playerOnBoat and self.playerX == nextX+1 and self.playerY == nextY then --move player with boat
-                self.playerX = nextX+2
-                self.playerY = nextY
-            end 
-            self.grid[nextX+1][nextY] = "w" -- put water there
-            self:applyGravity(nextX+1)      -- let the water fall down
-            self:applyGravity(nextX+2)      -- let the boat fall down
-            print("flood:successful")
-            return
-        elseif self.grid[nextX+1][nextY-1] == "" then
-            self.grid[nextX+1][nextY-1] = "h" -- move boat 
-            if self.playerOnBoat and self.playerX == nextX+1 and self.playerY == nextY then --move player with boat
-                self.playerX = nextX+1
-                self.playerY = nextY-1
-            end 
-            self.grid[nextX+1][nextY] = "w" -- put water there
-            print("flood:successful")
-            return
-        else
-            self.grid[nextX+1][nextY] = "w"
-            self:loseLevel("oh no, your boat got crushed by the water!")
-            return
-        end
-    elseif self.grid[nextX+1][nextY] == "a" then
-        -- flooded a sheep, oh no!
-        self.grid[nextX+1][nextY] = "w" -- set water
-        self.sheepCount = self.sheepCount - 1 --remove sheep
-        self:loseLevel("Don't let your sheep get wet!")
-        return
-    end
-
-    -- surface is even/full, start new wave
-    print("flood:starting new layer")
-    if self.grid[startX][startY-1] == "" then
-        self.grid[startX][startY-1] = "w"
-    else
-        startX = 1
-        while self.grid[startX][startY-1] ~= "" and startX < self.width do
-            startX = startX+1
-            if self.grid[startX][startY-1] == "" then
-                self.grid[startX][startY-1] = "w"
-                print("flood:successful")
-                return
-            elseif self.grid[startX][startY] ~= "w" then
-                return
-            end
-        end
-    end
+    -- flood from there
+    self:floodFrom(nextX, nextY)
 end
 
 function Level:update(dt)
