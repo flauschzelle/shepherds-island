@@ -408,10 +408,7 @@ function Level:movePlayer(x, y)
 
     end
 
-    if self.playerX ~= newX or self.playerY ~= newY then
-        sounds.step:setPitch(0.5+math.random())
-        sounds.step:play()
-    end
+    local didMove = self.playerX ~= newX or self.playerY ~= newY
 
     -- set new position
 
@@ -422,6 +419,13 @@ function Level:movePlayer(x, y)
     else
         self.playerOnBoat = false
     end
+
+    if didMove then
+        sounds.step:setPitch(0.5+math.random())
+        sounds.step:play()
+    end
+
+    return didMove
 end
 
 function Level:liftObject()
@@ -431,7 +435,7 @@ function Level:liftObject()
             side = -1
         end
         if self.playerX+side > self.width or self.playerX+side < 1 then
-            return
+            return false
         end
         local view_tile = self.grid[self.playerX+side][self.playerY] 
         if view_tile == "b" or view_tile == "a" or view_tile == "h" then
@@ -448,7 +452,12 @@ function Level:liftObject()
         end
         -- apply gravity in case something was pulled out from under stuff:
         self:applyGravity(self.playerX+side)
+
+        if self.carrying ~= "" then
+            return true
+        end
     end
+    return false
 end
 
 function Level:setDownObject()
@@ -459,7 +468,7 @@ function Level:setDownObject()
             side = -1
         end
         if self.playerX+side > self.width or self.playerX+side < 1 then
-            return
+            return false
         end
         local view_tile = self.grid[self.playerX+side][self.playerY] 
         if not self:isBlocked(self.playerX+side, self.playerY) then -- if there is room
@@ -494,7 +503,7 @@ function Level:setDownObject()
 
                 else
                     -- don't put anything else on boat
-                    return
+                    return false
                     --self.grid[self.playerX+side][self.playerY+down-1] = self.carrying -- set down object on help
                     --self.carrying = ""
                 end
@@ -515,7 +524,12 @@ function Level:setDownObject()
             end
 
         end
+
+        if self.carrying == "" then
+            return true
+        end
     end
+    return false
 end
 
 function Level:applyGravity(x)

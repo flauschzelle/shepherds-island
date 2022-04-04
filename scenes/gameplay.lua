@@ -75,33 +75,42 @@ function scene:handleInput()
     if levelManager.currentLevel().started == true then
         local lvl = levelManager.currentLevel()
         if lvl.lost == false and lvl.won == false and input:isPressed("left") then
+            local didMove = true
             if lvl.playerLookingLeft then
                 --go left
-                lvl:movePlayer(-1, 0)
+                didMove = lvl:movePlayer(-1, 0)
             else 
                 lvl.playerLookingLeft = true
             end
-            lvl:nextState()
+            if didMove then
+                lvl:nextState()
+            end
         end
         if lvl.lost == false and lvl.won == false and input:isPressed("right") then
+            local didMove = true
             if lvl.playerLookingLeft then
                 lvl.playerLookingLeft = false
             else
                 --go right
-                lvl:movePlayer(1, 0)
+                didMove = lvl:movePlayer(1, 0)
             end
-            lvl:nextState()
+            if didMove then
+                lvl:nextState()
+            end
         end
         if input:isPressed("wait") then
              lvl:nextState()
         end
         if lvl.lost == false and lvl.won == false and input:isPressed("pickup") then
+            local didMove = true
             if lvl.carrying == "" then
-                lvl:liftObject()
+                didMove = lvl:liftObject()
             else 
-                lvl:setDownObject()
+                didMove = lvl:setDownObject()
             end
-            lvl:nextState()
+            if didMove then
+                lvl:nextState()
+            end
         end
         if lvl.won == false and input:isPressed("back") then
             lvl:popState()
