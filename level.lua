@@ -637,16 +637,23 @@ function Level:drawGrid()
 end
 
 
-function Level:draw()
+function Level:draw(includeTitle)
+    if includeTitle == nil then
+        includeTitle = true
+    end
+
     self:drawGrid()
     self:drawPlayer()
     if self.lost then
         local lostMessage = self.lostMessage.."\nPress "..Input:getKeyString("reset").." to restart\nor "..Input:getKeyString("back").." to undo one step."
         love.graphics.printf(lostMessage, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
     end
-    local gap = CANVAS_HEIGHT/16
-    love.graphics.setFont(bigfont)
-    love.graphics.printf(self.name, gap, gap, CANVAS_WIDTH-2*gap, "right")
+
+    if includeTitle then
+        local gap = CANVAS_HEIGHT/16
+        love.graphics.setFont(bigfont)
+        love.graphics.printf(self.name, gap, gap, CANVAS_WIDTH-2*gap, "right")
+    end
 
     if (self.started == false and self.intro ~= nil) then
         love.graphics.printf(self.intro, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
