@@ -398,8 +398,8 @@ end
 
 function Level:getBoatIndex(x, y)
     local index = 0
-    for i, b in pairs(self.boatIndex) do
-        if b["x"] == x and b["y"] == y then
+    for i, boat in pairs(self.boatIndex) do
+        if boat["x"] == x and boat["y"] == y then
             index = i
         end
     end
@@ -502,8 +502,17 @@ function Level:liftObject()
         local view_tile = self.grid[self.playerX+side][self.playerY] 
         if view_tile == "b" or view_tile == "a" or view_tile == "h" then
             self.carrying = view_tile -- pick up object from the next tile
+            if self.carrying == "h" then
+                local boat = self:getBoatIndex(self.playerX+side, self.playerY)
+                if boat == 0 then
+                    print("boat index not found, this should not happen!")
+                    return
+                end
+                -- set boat position to 0,0 while carrying it
+                self.boatIndex[boat]["x"] = 0
+                self.boatIndex[boat]["y"] = 0
+            end
             self.grid[self.playerX+side][self.playerY]  = ""
-
             if view_tile == "b" or view_tile == "h" then
                 sounds.stone_pickup:setPitch(0.8+0.4*math.random())
                 sounds.stone_pickup:play()
@@ -526,6 +535,7 @@ function Level:setDownObject()
     if self.carrying ~= "" then
         local whatDidWeCarry = self.carrying
         local side = 1
+        local down = 0
         if self.playerLookingLeft then
             side = -1
         end
@@ -534,7 +544,6 @@ function Level:setDownObject()
         end
         local view_tile = self.grid[self.playerX+side][self.playerY] 
         if not self:isBlocked(self.playerX+side, self.playerY) then -- if there is room
-            local down = 0
             local view_down = self.grid[self.playerX+side][self.playerY+down]
             print(view_down)
             while view_down == "" do
@@ -593,7 +602,16 @@ function Level:setDownObject()
             end
 
         end
-
+        if whatDidWeCarry == "h" and self.carrying == "" then
+            local boat = self:getBoatIndex(0, 0)
+            if boat == 0 then
+                print("boat index not found, this should not happen!")
+                return
+            end
+            -- update boat position in index
+            self.boatIndex[boat]["x"] = self.playerX+side
+            self.boatIndex[boat]["y"] = self.playerY+down-1
+        end
         if self.carrying == "" then
             return true
         end
