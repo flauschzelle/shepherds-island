@@ -35,13 +35,15 @@ function love.load()
     sounds = {}
     for file in listUsefulFiles("sounds") do
         sounds[file.basename] = love.audio.newSource(file.path, "static")
+        sounds[file.basename]:setVolume(0.7)
     end
+    sounds.sheep:setVolume(0.4)
 
     music = {}
     for file in listUsefulFiles("music") do
         music[file.basename] = love.audio.newSource(file.path, "stream")
         music[file.basename]:setLooping(true)
-        music[file.basename]:setVolume(1)
+        music[file.basename]:setVolume(0.5)
     end
 
     fonts = {}
