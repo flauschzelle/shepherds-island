@@ -9,6 +9,7 @@ function scene:enter()
     -- level_grid_margins_y = levelManager.currentLevel().offsetY
     -- self.player = Cursor:new("image", "stop", levelManager.currentLevel().playerX, levelManager.currentLevel().playerY, 50, level_grid_cols, level_grid_rows, {top = level_grid_margins_y, bottom = level_grid_margins_y, left = level_grid_margins_x, right = level_grid_margins_x}, "center", "center")
     -- self.player:setImage(images.child)
+    self.muted = false
     self.music = music.bleeping_demo
     self.music:play()
 end
@@ -64,6 +65,15 @@ function scene:handleInput()
 
     if input:isPressed("quit") then
         roomy:push(scenes.menu)
+    end
+
+    if input:isPressed("mute") then
+        self.muted = not self.muted
+        if self.muted then
+            self.music:pause()
+        else
+            self.music:play()
+        end
     end
 
     -- cheat to win current level

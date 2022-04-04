@@ -373,7 +373,10 @@ end
 function Level:update(dt)
     if self.sheepSaved == self.sheepToSave then -- have we saved all sheep?
         if self.playerOnBoat then -- are we safe?
-            self.won = true
+            if not self.won then
+                sounds.win:play()
+                self.won = true
+            end
         end
     end
 end
