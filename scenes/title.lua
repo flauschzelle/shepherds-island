@@ -17,6 +17,12 @@ local backgroundLevel = Level:new(name, map)
 
 function scene:enter()
     --love.mouse.setRelativeMode(false)
+    self.music = music.take_a_chance
+    self.music:play()
+end
+
+function scene:leave()
+    self.music:stop()
 end
 
 function scene:draw()

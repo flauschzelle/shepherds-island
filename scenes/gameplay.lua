@@ -9,7 +9,7 @@ function scene:enter()
     -- level_grid_margins_y = levelManager.currentLevel().offsetY
     -- self.player = Cursor:new("image", "stop", levelManager.currentLevel().playerX, levelManager.currentLevel().playerY, 50, level_grid_cols, level_grid_rows, {top = level_grid_margins_y, bottom = level_grid_margins_y, left = level_grid_margins_x, right = level_grid_margins_x}, "center", "center")
     -- self.player:setImage(images.child)
-    self.music = music.ambient_starfield
+    self.music = music.bleeping_demo
     self.music:play()
 end
 
