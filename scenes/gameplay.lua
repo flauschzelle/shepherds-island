@@ -70,7 +70,7 @@ function scene:handleInput()
     -- actual level controls:
     if levelManager.currentLevel().started == true then
         local lvl = levelManager.currentLevel()
-        if lvl.lost == false and input:isPressed("left") then
+        if lvl.lost == false and lvl.won == false and input:isPressed("left") then
             if lvl.playerLookingLeft then
                 --go left
                 lvl:movePlayer(-1, 0)
@@ -79,7 +79,7 @@ function scene:handleInput()
             end
             lvl:nextState()
         end
-        if lvl.lost == false and input:isPressed("right") then
+        if lvl.lost == false and lvl.won == false and input:isPressed("right") then
             if lvl.playerLookingLeft then
                 lvl.playerLookingLeft = false
             else
@@ -91,7 +91,7 @@ function scene:handleInput()
         if input:isPressed("wait") then
              lvl:nextState()
         end
-        if lvl.lost == false and input:isPressed("pickup") then
+        if lvl.lost == false and lvl.won == false and input:isPressed("pickup") then
             if lvl.carrying == "" then
                 lvl:liftObject()
             else 
@@ -99,10 +99,10 @@ function scene:handleInput()
             end
             lvl:nextState()
         end
-        if input:isPressed("back") then
+        if lvl.won == false and input:isPressed("back") then
             lvl:popState()
         end
-        if input:isPressed("reset") then
+        if lvl.won == false and input:isPressed("reset") then
             lvl:popState(true) -- restart = true
         end
     end
