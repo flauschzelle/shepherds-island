@@ -1,18 +1,17 @@
 name = "Rafting"
 map = [[
 
-w ph
-ggggg
-    gw                                              
-     g                                              
-     gw                                             
-     gw                     b                       
-     gg          ga        ggggggggg  ggg         a 
-      gggggggggggggggwwwwwwg       g    g        ggg
-                    gggggggg       gggggg       gggg
-                                   ggggggwwwww ggggg
-                                        gggggggggggg
-
+   ph
+   gg
+  gggw                                              
+wggggg                                              
+ggggggw                                             
+ggggggw                     b                       
+ggggggg          ga        ggggggggg  ggg         a 
+gggggggggggggggggggggwwwwwwggggggggg    g        ggg
+ggggggggggggggggggggggggggggggggggggggggg       gggg
+gggggggggggggggggggggggggggggggggggggggggwwwww ggggg
+gggggggggggggggggggggggggggggggggggggggggggggggggggg
 ]]
 
 intro = ""
