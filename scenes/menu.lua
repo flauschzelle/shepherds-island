@@ -18,7 +18,6 @@ function box:draw(x, y)
     love.graphics.rectangle("line", x, y, 70, 50)
     love.graphics.setColor(1,1,1)
 end
-
 arrow = {} --initialize geometry object with draw function
 function arrow:draw(x, y)
     local size = 25
@@ -46,7 +45,7 @@ function scene:draw_level_list()
         love.graphics.printf(name, posX, posY, colWidth, "left")
         -- draw selection indicator:
         if i == self.selected then
-            arrow:draw(posX-20, posY)
+            love.graphics.draw(images.boat_mini, posX-30, posY+10, 0, 4, 4, 1, 0.5)
         end
         i = i +1
     end
