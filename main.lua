@@ -38,6 +38,7 @@ function love.load()
     for file in listUsefulFiles("music") do
         music[file.basename] = love.audio.newSource(file.path, "stream")
         music[file.basename]:setLooping(true)
+        music[file.basename]:setVolume(0)
     end
 
     fonts = {}

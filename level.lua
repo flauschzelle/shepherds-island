@@ -428,7 +428,13 @@ function Level:movePlayer(x, y)
 
     end
 
+    if self.playerX ~= newX or self.playerY ~= newY then
+        sounds.step:setPitch(0.5+math.random())
+        sounds.step:play()
+    end
+
     -- set new position
+
     self.playerX = newX
     self.playerY = newY
     if self.grid[self.playerX][self.playerY] == "h" then
@@ -451,6 +457,14 @@ function Level:liftObject()
         if view_tile == "b" or view_tile == "a" or view_tile == "h" then
             self.carrying = view_tile -- pick up object from the next tile
             self.grid[self.playerX+side][self.playerY]  = ""
+
+            if view_tile == "b" or view_tile == "h" then
+                sounds.stone_pickup:setPitch(0.8+0.4*math.random())
+                sounds.stone_pickup:play()
+            elseif view_tile == "a" then
+                sounds.sheep:setPitch(0.8+0.4*math.random())
+                sounds.sheep:play()
+            end
         end
         -- apply gravity in case something was pulled out from under stuff:
         self:applyGravity(self.playerX+side)
@@ -459,6 +473,7 @@ end
 
 function Level:setDownObject()
     if self.carrying ~= "" then
+        local whatDidWeCarry = self.carrying
         local side = 1
         if self.playerLookingLeft then
             side = -1
@@ -493,6 +508,10 @@ function Level:setDownObject()
                     self.sheepCount = self.sheepCount - 1
                     self.sheepSaved = self.sheepSaved + 1
                     self.carrying = ""
+
+                    sounds.sheep_happy:setPitch(0.5+math.random())
+                    sounds.sheep_happy:play()
+
                 else
                     -- don't put anything else on boat
                     return
@@ -505,6 +524,16 @@ function Level:setDownObject()
                     self.carrying = ""
                 end
             end
+
+            -- Play sound if we dropped something.
+            if whatDidWeCarry == "b" or whatDidWeCarry == "h" then
+                sounds.stone_put:setPitch(0.5+math.random())
+                sounds.stone_put:play()
+            elseif whatDidWeCarry == "a" then
+                sounds.sheep_put:setPitch(0.5+math.random())
+                sounds.sheep_put:play()
+            end
+
         end
     end
 end

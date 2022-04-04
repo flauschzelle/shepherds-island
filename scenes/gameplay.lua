@@ -55,10 +55,6 @@ function scene:handleInput()
             if nextLevel() == false then    -- goes to next level if there is one
                 roomy:enter(scenes.credits) -- show credits screen
             end
-        else
-        -- gameplay stuff
-            sounds.meow:setPitch(0.5+math.random())
-            sounds.meow:play()
         end
     end
 
