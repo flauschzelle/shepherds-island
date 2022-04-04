@@ -101,6 +101,8 @@ function scene:handleInput()
                 -- switch to new level
                 levelManager.current = newlevelno
                 levelManager:currentLevel():popState(true) --reset level state
+                levelManager:currentLevel().won = false
+                levelManager:currentLevel().lost = false
             end
             -- leave menu
             roomy:pop()
