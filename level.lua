@@ -212,7 +212,7 @@ function Level:flood()
     end
 
     ::found_start::
-    print("flood: found starting point")
+    print("flood: found starting point at x="..startX.." , y="..startY)
     -- go along the water surface
     local nextX = startX
     local nextY = startY
@@ -230,7 +230,7 @@ function Level:flood()
         end
     end
     -- found a gap or the end of the surface
-    print("flood: found gap or end of water surface")
+    print("flood: found end of water surface at x="..nextX.." , y="..nextY)
     if nextX < self.width and self.grid[nextX+1][nextY] == "" then 
         self.grid[nextX+1][nextY] = "w" -- put water there
         self:applyGravity(nextX+1)      -- let it fall down
