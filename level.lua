@@ -556,7 +556,7 @@ function Level:applyGravity(x)
                             self.playerX = x
                             self.playerY = (y-1)+down
                         end 
-                elseif tile == "h" and self.playerOnBoat and self.playerX == x and self.playerY == y+down then
+                elseif tile == "h" and self.playerOnBoat and self.playerX == x and self.playerY == y then
                         self.grid[x][y+down-1] = tile
                         self.grid[x][y] = ""
                         self.playerX = x       -- move player with boat
