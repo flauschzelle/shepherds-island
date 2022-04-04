@@ -4,14 +4,14 @@ map = [[
 
 
                p   h            
-              gggwgggwwgggwwwwgga 
+              gggwgggwwgggwwwwgga
              gggggggggggggwwwwgggg
       h     gggggggggggggggggggggg
 wwwwwwwwwwwwgggggggggggggggggggggg
 ]]
 
-intro = ""
+intro = "Got nothing to do? Press Enter to wait a step."
 
-level = Level:new(name, map)
+level = Level:new(name, map, intro)
 
 return level

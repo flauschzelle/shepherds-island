@@ -10,8 +10,6 @@ wwwgggggggggggp bbbbbbbg
 wwgggggggggggggggggggggg
 ]]
 
-intro = "Got nothing to do? Press Enter to wait a step."
-
-level = Level:new(name, map, intro)
+level = Level:new(name, map)
 
 return level
