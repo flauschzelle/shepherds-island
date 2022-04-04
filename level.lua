@@ -153,6 +153,7 @@ function Level:saveState()
     state.sheepSaved = self.sheepSaved
     state.carrying = self.carrying
     state.lost = self.lost
+    state.won = self.won
     state.playerOnBoat = self.playerOnBoat
     state.boatCount = self.boatCount
     state.boatIndex = deepcopy(self.boatIndex)
@@ -181,6 +182,7 @@ function Level:popState(restart)
     self.sheepSaved = state.sheepSaved
     self.carrying = state.carrying
     self.lost = state.lost
+    self.won = state.won
     self.playerOnBoat = state.playerOnBoat
     self.boatCount = state.boatCount
     self.boatIndex = state.boatIndex
