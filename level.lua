@@ -216,14 +216,14 @@ function Level:flood()
     -- go along the water surface
     local nextX = startX
     local nextY = startY
-    while self.grid[nextX][nextY] == "w" and nextX < self.width do
+    while self.grid[nextX][nextY] == "w" and nextX < self.width and nextY < self.height do
         print("flood:going along water surface")
         if self.grid[nextX+1][nextY] =="w" then
             nextX = nextX+1
         elseif (self.grid[nextX+1][nextY] == "" or self.grid[nextX+1][nextY] == "h") and self.grid[nextX+1][nextY+1] == "w" then
             nextX = nextX+1
             nextY = nextY+1
-        elseif (self.grid[nextX+1][nextY] == "" or self.grid[nextX+1][nextY] == "h") and self.grid[nextX][nextY+1] == "w" then
+        elseif self.grid[nextX][nextY+1] == "w" then
             nextY = nextY + 1
         else
             break
@@ -517,7 +517,7 @@ function Level:applyGravity(x)
             if tile == "w" and tile_below == "h" then
                 self.grid[x][y] = ""
                 self.grid[x][y+down] = tile
-                if self.grid[x+1][y+down] == "" then
+                if x+1 <= self.width and self.grid[x+1][y+down] == "" then
                     self.grid[x+1][y+down] = "h" --move boat to the right
                     if self.playerOnBoat then -- move player with boat
                         self.playerX = x+1
