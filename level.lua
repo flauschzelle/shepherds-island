@@ -673,13 +673,13 @@ function Level:applyGravity(x)
                     self.grid[x][y] = ""
                     self.grid[x][y+down] = "w"
                 elseif tile == "h" then
-                    local boat = self:getBoatIndex(x, y+down)
+                    local boat = self:getBoatIndex(x, y)
                     if boat == 0 then
                         print("boat index not found, this should not happen!")
                         return
                     end
                     self.grid[x][y] = ""
-                    self.moveBoat(boat, x, y+down-1)
+                    self:moveBoat(boat, x, y+down-1)
                 else
                     self.grid[x][y+down-1] = tile
                     self.grid[x][y] = ""
