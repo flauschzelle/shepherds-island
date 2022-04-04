@@ -114,7 +114,7 @@ function Level:initialize(name, map, intro, outro)
     if outro ~= nil then
         self.outro = outro
     else
-        self.outro = "Congratulations, you won! Press Enter to continue."
+        self.outro = "You're safe, for now!\n\nPress Enter to go to the next island."
     end
 
     -- initialize level state history
@@ -660,6 +660,7 @@ function Level:draw(includeTitle)
     self:drawPlayer()
     if self.lost then
         local lostMessage = self.lostMessage.."\nPress "..Input:getKeyString("reset").." to restart\nor "..Input:getKeyString("back").." to undo one step."
+        dimRect()
         love.graphics.printf(lostMessage, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
     end
 
@@ -670,8 +671,10 @@ function Level:draw(includeTitle)
     end
 
     if (self.started == false and self.intro ~= nil) then
-        love.graphics.printf(self.intro, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
+        dimRect()
+        love.graphics.printf(self.intro, CANVAS_WIDTH/8, CANVAS_HEIGHT/2, CANVAS_WIDTH-CANVAS_WIDTH/4, "center")
     elseif self.won == true then
+        dimRect()
         love.graphics.printf(self.outro, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
     end
 end

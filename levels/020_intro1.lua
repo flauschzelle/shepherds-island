@@ -4,8 +4,8 @@ map = [[
 
          p a
       a ggggg a
-      gggggggggh
-wwwwwggggggggggwwww
+      ggggggggggh
+wwwwwgggggggggggwww
 ]]
 
 intro = ""

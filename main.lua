@@ -112,6 +112,12 @@ function handleInput()
     end
 end
 
+function dimRect()
+    love.graphics.setColor(0, 0, 0, 0.5)
+    love.graphics.rectangle("fill", 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
+    love.graphics.setColor(1, 1, 1)
+end
+
 function love.draw()
     love.graphics.setColor(1, 1, 1) -- white
     tlfres.beginRendering(CANVAS_WIDTH, CANVAS_HEIGHT)
