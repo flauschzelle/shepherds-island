@@ -1,4 +1,4 @@
-name = "Rescue mission"
+name = "Rescue Mission"
 map = [[
 
 

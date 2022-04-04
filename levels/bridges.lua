@@ -3,10 +3,10 @@ map = [[
 
 
 
-             p       h       a
-            gggwggggggggwwwwgggg
-         h gggggggggggggwwwwgggg
-wwwwwwwwwwgggggggggggggggggggggg
+               p   h            
+              gggwgggwwgggwwwwgga 
+           h gggggggggggggwwwwgggg
+wwwwwwwwwwwwgggggggggggggggggggggg
 ]]
 
 intro = ""

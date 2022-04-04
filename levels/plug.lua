@@ -1,13 +1,14 @@
-name = "Plug"
+name = "Bath Tub"
 map = [[
                    
-wwwwwwwwggg gg         g
-wwwwwwwwggg ggg       gg
-wwwwwwwwggg  ggg p b ggg
-wwwwwwwwgggg ggggggggggg
+        ggg g           gggggggg
+        ggg gg         ggggggggg
+wwwwwwwwggg ggg       gggggggggg
+wwwwwwwwggg  ggg pbb ggggggggggg
+wwwwwwwwggg  ggggggggggggggggggg
 wwwwwwwwgggg  a
-wwwwwwwggggggggggggggggg
-wwwwwwwggggggggggggggggggggggh
+wwwwwwwggggggwgggggggggggggggggg
+wwwwwwwggggggggggggggggggggggggggggh
 ]]
 
 intro = ""

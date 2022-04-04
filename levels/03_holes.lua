@@ -1,16 +1,16 @@
 name = "Holes"
 map = [[
-g
-g
-g a
-gggg
-gggg p a         a
-gggggggggggggg ggggg
-gggggggggggggg       
-gggggggggggggg 
-gggggggggggggggggg
-gggggggggggggggggg
-ggggggggggggggggggggggggh
+         
+        g
+        g a
+        gggg
+        gggg p a         a
+        gggggggggggggg ggggg
+        gggggggggggggg       
+        gggggggggggggg 
+        gggggggggggggggggg
+wwwwwwwwgggggggggggggggggg
+wwwwwwwwggggggggggggggggggggggggh
 ]]
 
 

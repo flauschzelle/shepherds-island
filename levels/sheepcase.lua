@@ -1,16 +1,16 @@
 name = "A Flight of Sheep"
 map = [[
 
-                      bbb
-            aa       gggggh
-            ggg      gggggw
-            ggg p a  gggggw
-            ggggggggggggggw
-            ggggggggggggggw
-            ggggggggggggggw
-            ggggggggggggggw
-            ggggggggggggggw
-wwwwwwwwwwwwggggggggggggggw
+                  bb 
+        ba       gggggh
+        ggg      gggggw
+        ggg p a  gggggw
+        ggggggggggggggw
+        ggggggggggggggw
+        ggggggggggggggw
+        ggggggggggggggw
+wwww    ggggggggggggggw
+wwwwwwwwggggggggggggggw
 ]]
 
 intro = ""
