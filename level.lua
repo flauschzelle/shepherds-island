@@ -263,7 +263,7 @@ function Level:floodFrom(x, y)
                 return
             end
             if self:moveBoat(other_boat, x+3, y) then
-                self.moveBoat(boat, x+2, y)
+                self:moveBoat(boat, x+2, y)
                 self.grid[x+1][y] = "w"
                 self:applyGravity(x+3)
                 self:applyGravity(x+2)
@@ -636,7 +636,7 @@ function Level:applyGravity(x)
                 if self:moveBoat(boat, x+1, y+down) then
                     self.grid[x][y+down] = "w"
                     self:applyGravity(x+1) -- let boat fall down
-                elseif self.moveBoat(boat, x, (y-1)+down) then
+                elseif self:moveBoat(boat, x, (y-1)+down) then
                     self.grid[x][y+down] = "w"
                     self:applyGravity(x+1) -- let boat fall down
                 end
@@ -784,7 +784,7 @@ function Level:draw(includeTitle)
 
     if (self.started == false and self.intro ~= nil) then
         dimRect()
-        love.graphics.printf(self.intro, CANVAS_WIDTH/8, CANVAS_HEIGHT/2, CANVAS_WIDTH-CANVAS_WIDTH/4, "center")
+        love.graphics.printf(self.intro, CANVAS_WIDTH/8, CANVAS_HEIGHT*1/4, CANVAS_WIDTH-CANVAS_WIDTH/4, "center")
     elseif self.won == true then
         dimRect()
         love.graphics.printf(self.outro, 0, CANVAS_HEIGHT/2, CANVAS_WIDTH, "center")
