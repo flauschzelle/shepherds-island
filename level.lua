@@ -556,6 +556,13 @@ function Level:setDownObject()
                 self.carrying = ""
             elseif view_down == "h" then
                 if self.carrying == "a" then
+                    local boat = self:getBoatIndex(self.playerX+side, self.playerY+down)
+                    if boat == 0 then
+                        print("boat index not found, this should not happen!")
+                        return
+                    end
+                    local old_sheep_in_boat = self.boatIndex[boat]["sheep"]
+                    self.boatIndex[boat]["sheep"] = old_sheep_in_boat + 1 
                     self.sheepCount = self.sheepCount - 1
                     self.sheepSaved = self.sheepSaved + 1
                     self.carrying = ""
@@ -718,11 +725,19 @@ function Level:drawGrid()
                                    self.tileSize / 16)
             end
             -- draw saved sheep on boat
-            if tile == "h" and self.sheepSaved > 0 then
-                for i = 1, self.sheepSaved do
-                    love.graphics.draw(images["sheep_mini"], 2*i*(self.tileSize/16) + self.tileSize*0.3 + self.offsetX + (x - 1) * self.tileSize,
-                   2* (i%2)*self.tileSize/16 + self.offsetY + (y - 0.5) * self.tileSize, 0, self.tileSize / 16,
-                    self.tileSize / 16, images["sheep_mini"]:getWidth()/2, images["sheep_mini"]:getHeight()/2)
+            if tile == "h" then
+                local boat = self:getBoatIndex(x, y)
+                if boat == 0 then
+                    print("boat index not found, this should not happen!")
+                    return
+                end
+                local sheep_on_boat = self.boatIndex[boat]["sheep"]
+                if sheep_on_boat > 0 then
+                    for i = 1, sheep_on_boat do
+                        love.graphics.draw(images["sheep_mini"], 2*i*(self.tileSize/16) + self.tileSize*0.3 + self.offsetX + (x - 1) * self.tileSize,
+                        2* (i%2)*self.tileSize/16 + self.offsetY + (y - 0.5) * self.tileSize, 0, self.tileSize / 16,
+                        self.tileSize / 16, images["sheep_mini"]:getWidth()/2, images["sheep_mini"]:getHeight()/2)
+                    end
                 end
             end
         end
