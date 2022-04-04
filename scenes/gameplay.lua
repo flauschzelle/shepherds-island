@@ -51,8 +51,12 @@ function scene:handleInput()
         if levelManager.currentLevel().started == false then
             -- start level from intro
             levelManager.currentLevel():start()
+            return
         elseif levelManager.currentLevel():isWon() then
-            if nextLevel() == false then    -- goes to next level if there is one
+            local next = nextLevel() -- starts the next level and returns true, or false if there is no next level
+            if next then
+                return
+            else
                 roomy:enter(scenes.credits) -- show credits screen
             end
         end
