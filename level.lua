@@ -686,7 +686,7 @@ function Level:drawPlayer()
         end
         if sprite ~= "" then
             sprite = sprite.."_mini"
-            love.graphics.draw(images[sprite], pos_x, pos_y-(self.tileSize*11/16), 0, self.tileSize/16, self.tileSize/16, images[sprite]:getWidth()/2, images[sprite]:getHeight()/2)
+            love.graphics.draw(images[sprite], pos_x, pos_y+(self.tileSize*0/16), 0, self.tileSize/16, self.tileSize/16, images[sprite]:getWidth()/2, images[sprite]:getHeight()/2)
         end
     end
 end
