@@ -1,13 +1,16 @@
 name = "Delay the Inevitable"
 map = [[
-
-
-
-                       gh
-  apggggggggg          gw
-wwggggggggggggggggggggggw
-wgggggggggggggggggggggggw
+   
+   
+   
+                                     gggh
+                            b        gggw
+                    b   b b b        gggw
+wwwww          a p gggggggggggggggggggggw
+wwwwwwwwwwwwwwggggggggggggggggggggggggggw
+wwwwwwwwwwwwwgggggggggggggggggggggggggggw
 ]]
+
 
 intro = ""
 
