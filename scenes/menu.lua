@@ -1,6 +1,6 @@
 local scene = {} 
 
-MARGIN = 50
+MARGIN = 60
 LINES = 6
 
 -- some geometric shapes to use as cursors: --
@@ -53,7 +53,7 @@ function scene:draw_level_list()
         -- draw selection indicator:
         love.graphics.setColor(1,1,1)
         if i == self.selected then
-            love.graphics.draw(images.boat_mini, posX-30, posY+10, 0, 4, 4, 1, 0.5)
+            love.graphics.draw(images.boat_mini, posX-50, posY+10, 0, 5, 5, 1, 0.5)
         end
         i = i +1
     end
