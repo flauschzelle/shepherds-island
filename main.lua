@@ -46,6 +46,8 @@ function love.load()
         music[file.basename]:setVolume(0.5)
     end
 
+    music["bleeping_demo"]:setPitch(0.9)
+
     fonts = {}
     for file in listUsefulFiles("fonts") do
         fonts[file.basename] = {}
